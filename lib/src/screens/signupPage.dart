@@ -4,7 +4,7 @@ import '../Widget/bezierContainer.dart';
 import 'package:alumni_portal/src/screens/loginPage.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key ?key, this.title}) : super(key: key);
+  SignUpPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
@@ -13,6 +13,23 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _fullName = '';
+  String _Password = '';
+  String _emailAddress = '';
+
+  void _submit() {
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+    if (isValid) {
+      _formKey.currentState!.save();
+      print(_fullName);
+      print(_Password);
+      print(_emailAddress);
+
+    }
+  }
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -60,27 +77,37 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _submitButton() {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color.fromARGB(255, 12, 167, 238), Color.fromARGB(255, 1, 81, 230)])),
+        // width: MediaQuery.of(context).size.width,
+        // padding: EdgeInsets.symmetric(vertical: 15),
+        // alignment: Alignment.center,
+        // decoration: BoxDecoration(
+        //     borderRadius: BorderRadius.all(Radius.circular(5)),
+        //     boxShadow: <BoxShadow>[
+        //       BoxShadow(
+        //           color: Colors.grey.shade200,
+        //           offset: Offset(2, 4),
+        //           blurRadius: 5,
+        //           spreadRadius: 2)
+        //     ],
+        //     gradient: LinearGradient(
+        //         begin: Alignment.centerLeft,
+        //         end: Alignment.centerRight,
+        //         colors: [
+        //           Color.fromARGB(255, 12, 167, 238),
+        //           Color.fromARGB(255, 1, 81, 230)
+        //         ])),
+        child: ElevatedButton(
       child: Text(
         'Register Now',
         style: TextStyle(fontSize: 20, color: Colors.white),
       ),
-    );
+      onPressed: _submit,
+    ));
+
+    //Text(
+    // 'Register Now',
+    // style: TextStyle(fontSize: 20, color: Colors.white),
+    // ),
   }
 
   Widget _loginAccountLabel() {
@@ -130,19 +157,64 @@ class _SignUpPageState extends State<SignUpPage> {
           children: [
             const TextSpan(
               text: 'Portal',
-              style: TextStyle(color: Color.fromARGB(255, 1, 81, 230), fontSize: 30),
+              style: TextStyle(
+                  color: Color.fromARGB(255, 1, 81, 230), fontSize: 30),
             ),
           ]),
     );
   }
 
   Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField("Full Name"),
-        _entryField("Email id"),
-        _entryField("Password", isPassword: true),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            onSaved: (newValue) {
+              _fullName = newValue!;
+            },
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+              label: Text('Full Name'),
+            ),
+          ),
+
+          TextFormField(
+            onSaved: (newValue) {
+              _emailAddress = newValue!;
+            },
+            validator: (value) {
+              if (value!.isEmpty || !value!.contains('@')) {
+                return 'Please Enter valid Email address';
+              }
+              return null;
+            },
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              label: Text('Email'),
+            ),
+          ),
+
+          TextFormField(
+            onSaved: (newValue) {
+              _Password = newValue!;
+            },
+            validator: (value) {
+              if (value!.isEmpty || value.length < 7) {
+                return 'Password must be 7 characters long';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              label: Text('Password'),
+            ),
+            obscureText: true,
+          )
+          // _entryField("Full Name"),
+          // _entryField("Email id"),
+          // _entryField("Password", isPassword: true),
+        ],
+      ),
     );
   }
 
