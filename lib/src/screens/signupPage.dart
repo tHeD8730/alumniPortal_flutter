@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Widget/bezierContainer.dart';
 import 'package:alumni_portal/src/screens/loginPage.dart';
+import 'package:sizer/sizer.dart';
 
 class SignUpPage extends StatefulWidget {
-  SignUpPage({Key ?key, this.title}) : super(key: key);
+  SignUpPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
 
@@ -45,7 +47,7 @@ class _SignUpPageState extends State<SignUpPage> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           SizedBox(
-            height: 10,
+            height: 1.h,
           ),
           TextField(
               obscureText: isPassword,
@@ -75,10 +77,16 @@ class _SignUpPageState extends State<SignUpPage> {
           gradient: LinearGradient(
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
-              colors: [Color.fromARGB(255, 12, 167, 238), Color.fromARGB(255, 1, 81, 230)])),
+              colors: [
+                Color.fromARGB(255, 12, 167, 238),
+                Color.fromARGB(255, 1, 81, 230)
+              ])),
       child: Text(
         'Register Now',
-        style: TextStyle(fontSize: 20, color: Colors.white),
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
       ),
     );
   }
@@ -98,7 +106,10 @@ class _SignUpPageState extends State<SignUpPage> {
           children: <Widget>[
             Text(
               'Already have an account ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             SizedBox(
               width: 10,
@@ -130,7 +141,10 @@ class _SignUpPageState extends State<SignUpPage> {
           children: [
             const TextSpan(
               text: 'Portal',
-              style: TextStyle(color: Color.fromARGB(255, 1, 81, 230), fontSize: 30),
+              style: TextStyle(
+                color: Color.fromARGB(255, 1, 81, 230),
+                fontSize: 30,
+              ),
             ),
           ]),
     );
@@ -166,23 +180,31 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: height * .2),
+                    SizedBox(
+                      height: height * .2,
+                    ),
                     _title(),
                     SizedBox(
-                      height: 50,
+                      height: 6.h,
                     ),
                     _emailPasswordWidget(),
                     SizedBox(
-                      height: 20,
+                      height: 3.h,
                     ),
                     _submitButton(),
-                    SizedBox(height: height * .14),
+                    SizedBox(
+                      height: height * .14,
+                    ),
                     _loginAccountLabel(),
                   ],
                 ),
               ),
             ),
-            Positioned(top: 40, left: 0, child: _backButton()),
+            Positioned(
+              top: 40,
+              left: 0,
+              child: _backButton(),
+            ),
           ],
         ),
       ),
