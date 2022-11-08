@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "793223581902",
+    "project_id": "alumniportal-e806a",
+    "storage_bucket": "alumniportal-e806a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793223581902:android:a85ca63ed564c775bf409f",
+        "android_client_info": {
+          "package_name": "com.alumni_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6WMrcUxyZXTnzyggn1OiTf_skQKWWHyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:793223581902:android:00bafb44d26b86fdbf409f",
+        "android_client_info": {
+          "package_name": "com.example.alumni_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6WMrcUxyZXTnzyggn1OiTf_skQKWWHyY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
