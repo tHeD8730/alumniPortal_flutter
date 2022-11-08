@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'Widget/bezierContainer.dart';
-import 'package:alumni_portal/src/loginPage.dart';
+import '../Widget/bezierContainer.dart';
+import 'package:alumni_portal/src/screens/loginPage.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key ?key, this.title}) : super(key: key);

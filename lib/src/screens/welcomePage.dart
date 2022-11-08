@@ -1,8 +1,9 @@
 // ignore: file_names
-import 'package:alumni_portal/src/loginPage.dart';
-import 'package:alumni_portal/src/signupPage.dart';
+import 'package:alumni_portal/src/screens/loginPage.dart';
+import 'package:alumni_portal/src/screens/signupPage.dart';
 import 'package:flutter/material.dart'; 
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sizer/sizer.dart';
 
 class WelcomePage extends StatefulWidget {
   WelcomePage({Key? key, this.title}) : super(key: key);
@@ -136,6 +137,9 @@ class _WelcomePageState extends State<WelcomePage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
+                Image.asset("assets/images/logo_iiitl.png",
+                height: 12.h,
+                width: 20.w,),
                 _title(),
                 SizedBox(
                   height: 80,

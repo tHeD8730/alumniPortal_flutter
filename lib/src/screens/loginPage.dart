@@ -1,8 +1,9 @@
-import 'package:alumni_portal/src/signupPage.dart';
+import 'package:alumni_portal/src/screens/signupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_login_signup/src/signup.dart';
-import 'Widget/bezierContainer.dart';
+import '../Widget/bezierContainer.dart';
+import 'package:alumni_portal/src/screens/forgetPasswordScreen.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, this.title}) : super(key: key);
@@ -255,9 +256,15 @@ class _LoginPageState extends State<LoginPage> {
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.centerRight,
-                    child: Text('Forgot Password ?',
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w500)),
+                    child: GestureDetector(
+                      onTap: () {
+                        // Navigator.push(
+                        //     context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
+                      },
+                      child: Text('Forgot Password ?',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w500)),
+                    ),
                   ),
                   _divider(),
                   _facebookButton(),
