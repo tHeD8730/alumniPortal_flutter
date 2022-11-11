@@ -43,7 +43,7 @@ dependencies:
   get: 4.6.5
   connectivity_plus: ^2.3.7
   shared_preferences: ^2.0.15
-
+  local_auth: ^2.1.2
 
 dev_dependencies:
   flutter_test:

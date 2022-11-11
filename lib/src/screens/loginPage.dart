@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_login_signup/src/signup.dart';
 import '../Widget/bezierContainer.dart';
 import 'package:alumni_portal/src/screens/forgetPasswordScreen.dart';
+import 'package:sizer/sizer.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key? key, this.title}) : super(key: key);
@@ -51,15 +52,29 @@ void _submit() async {
         Navigator.pop(context);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10),
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
         child: Row(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: Icon(Icons.keyboard_arrow_left, color: Colors.black),
+              padding: EdgeInsets.only(
+                left: 0,
+                top: 10,
+                bottom: 10,
+              ),
+              child: Icon(
+                Icons.keyboard_arrow_left,
+                color: Colors.black,
+              ),
             ),
-            Text('Back',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
+            Text(
+              'Back',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            )
           ],
         ),
       ),
@@ -74,17 +89,22 @@ void _submit() async {
         children: <Widget>[
           Text(
             title,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
           ),
           SizedBox(
-            height: 10,
+            height: 1.h,
           ),
           TextField(
-              obscureText: isPassword,
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true))
+            obscureText: isPassword,
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              fillColor: Color(0xfff3f3f4),
+              filled: true,
+            ),
+          )
         ],
       ),
     );
@@ -92,26 +112,35 @@ void _submit() async {
 
   Widget _submitButton() {
     return Container(
-      // width: MediaQuery.of(context).size.width,
-      // padding: EdgeInsets.symmetric(vertical: 15),
-      // alignment: Alignment.center,
-      // decoration: BoxDecoration(
-      //     borderRadius: BorderRadius.all(Radius.circular(5)),
-      //     boxShadow: <BoxShadow>[
-      //       BoxShadow(
-      //           color: Colors.grey.shade200,
-      //           offset: Offset(2, 4),
-      //           blurRadius: 5,
-      //           spreadRadius: 2)
-      //     ],
-      //     gradient: LinearGradient(
-      //         begin: Alignment.centerLeft,
-      //         end: Alignment.centerRight,
-      //         colors: [Color.fromARGB(255, 12, 167, 238), Color.fromARGB(255, 1, 81, 230)])),
-      child: ElevatedButton(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(vertical: 15),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(
+          Radius.circular(5),
+        ),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+              color: Colors.grey.shade200,
+              offset: Offset(2, 4),
+              blurRadius: 5,
+              spreadRadius: 2)
+        ],
+        gradient: LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            Color.fromARGB(255, 12, 167, 238),
+            Color.fromARGB(255, 1, 81, 230),
+          ],
+        ),
+      ),
       child: Text(
-        'Log In',
-        style: TextStyle(fontSize: 20, color: Colors.white),
+        'Login',
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
       ),
       onPressed: _submit,
     )
@@ -124,7 +153,7 @@ void _submit() async {
       child: Row(
         children: <Widget>[
           SizedBox(
-            width: 20,
+            width: 3.w,
           ),
           Expanded(
             child: Padding(
@@ -144,7 +173,7 @@ void _submit() async {
             ),
           ),
           SizedBox(
-            width: 20,
+            width: 3.w,
           ),
         ],
       ),
@@ -153,7 +182,7 @@ void _submit() async {
 
   Widget _facebookButton() {
     return Container(
-      height: 50,
+      height: 7.h,
       margin: EdgeInsets.symmetric(vertical: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -187,11 +216,14 @@ void _submit() async {
                     topRight: Radius.circular(5)),
               ),
               alignment: Alignment.center,
-              child: Text('Log in with Facebook',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w400)),
+              child: Text(
+                'Log in with Facebook',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
           ),
         ],
@@ -203,7 +235,11 @@ void _submit() async {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpPage(),
+          ),
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 20),
@@ -214,17 +250,21 @@ void _submit() async {
           children: <Widget>[
             Text(
               'Don\'t have an account ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             SizedBox(
-              width: 10,
+              width: 2.w,
             ),
             Text(
               'Register',
               style: TextStyle(
-                  color: Color.fromARGB(255, 1, 81, 230),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600),
+                color: Color.fromARGB(255, 1, 81, 230),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -233,7 +273,7 @@ void _submit() async {
   }
 
   Widget _title() {
-    return  RichText(
+    return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
           text: 'Alumni',
@@ -246,7 +286,10 @@ void _submit() async {
           children: [
             const TextSpan(
               text: 'Portal',
-              style: TextStyle(color: Color.fromARGB(255, 1, 81, 230), fontSize: 30),
+              style: TextStyle(
+                color: Color.fromARGB(255, 1, 81, 230),
+                fontSize: 30,
+              ),
             ),
           ]),
     );
@@ -297,51 +340,61 @@ void _submit() async {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-        body: Container(
-      height: height,
-      child: Stack(
-        children: <Widget>[
-          Positioned(
+      body: Container(
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
               top: -height * .15,
               right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer()),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(height: height * .2),
-                  _title(),
-                  SizedBox(height: 50),
-                  _emailPasswordWidget(),
-                  SizedBox(height: 20),
-                  _submitButton(),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    alignment: Alignment.centerRight,
-                    child: GestureDetector(
-                      onTap: () {
-                        // Navigator.push(
-                        //     context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
-                      },
-                      child: Text('Forgot Password ?',
+              child: BezierContainer(),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: height * .2),
+                    _title(),
+                    SizedBox(height: 3.h),
+                    _emailPasswordWidget(),
+                    SizedBox(height: 2.h),
+                    _submitButton(),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      alignment: Alignment.centerRight,
+                      child: GestureDetector(
+                        onTap: () {
+                          // Navigator.push(
+                          //     context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
+                        },
+                        child: Text(
+                          'Forgot Password ?',
                           style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w500)),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  _divider(),
-                  _facebookButton(),
-                  SizedBox(height: height * .055),
-                  _createAccountLabel(),
-                ],
+                    _divider(),
+                    _facebookButton(),
+                    SizedBox(height: height * .055),
+                    _createAccountLabel(),
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(top: 40, left: 0, child: _backButton()),
-        ],
+            Positioned(
+              top: 40,
+              left: 0,
+              child: _backButton(),
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }

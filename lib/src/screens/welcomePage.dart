@@ -1,7 +1,8 @@
 // ignore: file_names
+import 'package:alumni_portal/src/local_auth_api.dart';
 import 'package:alumni_portal/src/screens/loginPage.dart';
 import 'package:alumni_portal/src/screens/signupPage.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,14 +20,20 @@ class _WelcomePageState extends State<WelcomePage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => LoginPage()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoginPage(),
+          ),
+        );
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: const EdgeInsets.symmetric(vertical: 13),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(5),
+            ),
             boxShadow: <BoxShadow>[
               BoxShadow(
                   color: const Color.fromARGB(255, 38, 4, 191).withAlpha(100),
@@ -37,7 +44,10 @@ class _WelcomePageState extends State<WelcomePage> {
             color: Colors.white),
         child: Text(
           'Login',
-          style: TextStyle(fontSize: 20, color: Color.fromARGB(255, 1, 81, 230)),
+          style: TextStyle(
+            fontSize: 20,
+            color: Color.fromARGB(255, 1, 81, 230),
+          ),
         ),
       ),
     );
@@ -47,7 +57,11 @@ class _WelcomePageState extends State<WelcomePage> {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => SignUpPage()));
+          context,
+          MaterialPageRoute(
+            builder: (context) => SignUpPage(),
+          ),
+        );
       },
       child: Container(
         width: MediaQuery.of(context).size.width,
@@ -59,7 +73,10 @@ class _WelcomePageState extends State<WelcomePage> {
         ),
         child: Text(
           'Register now',
-          style: TextStyle(fontSize: 20, color: Colors.white),
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
       ),
     );
@@ -67,98 +84,120 @@ class _WelcomePageState extends State<WelcomePage> {
 
   Widget _label() {
     return Container(
-        margin: EdgeInsets.only(top: 40, bottom: 20),
-        child: Column(
-          children: <Widget>[
-            Text(
-              'Quick login with Touch ID',
-              style: TextStyle(color: Colors.white, fontSize: 17),
+      margin: EdgeInsets.only(top: 40, bottom: 20),
+      child: Column(
+        children: <Widget>[
+          Text(
+            'Quick login with Touch ID',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 17,
             ),
-            SizedBox(
-              height: 20,
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          GestureDetector(
+            child: Icon(
+              Icons.fingerprint,
+              size: 90,
+              color: Colors.white,
             ),
-            Icon(Icons.fingerprint, size: 90, color: Colors.white),
-            SizedBox(
-              height: 20,
+            onTap: () async {
+              
+            },
+          ),
+          SizedBox(
+            height: 3.h,
+          ),
+          Text(
+            'Touch ID',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              decoration: TextDecoration.underline,
             ),
-            Text(
-              'Touch ID',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _title() {
     return RichText(
       textAlign: TextAlign.center,
       text: TextSpan(
-          text: 'Alumni',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.headline1,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-          ),
-          children: [
-            const TextSpan(
-              text: 'Portal',
-              style: TextStyle(color: Color.fromARGB(255, 1, 81, 230), fontSize: 30),
+        text: 'Alumni',
+        style: GoogleFonts.portLligatSans(
+          textStyle: Theme.of(context).textTheme.headline1,
+          fontSize: 30,
+          fontWeight: FontWeight.w700,
+          color: Colors.white,
+        ),
+        children: [
+          const TextSpan(
+            text: 'Portal',
+            style: TextStyle(
+              color: Color.fromARGB(255, 1, 81, 230),
+              fontSize: 30,
             ),
-          ]),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:SingleChildScrollView(
-        child:Container(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            height: MediaQuery.of(context).size.height,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(5)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                      color: Colors.grey.shade200,
-                      offset: Offset(2, 4),
-                      blurRadius: 5,
-                      spreadRadius: 2)
-                ],
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Color.fromARGB(255, 12, 167, 238), Color.fromARGB(255, 1, 81, 230)])),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset("assets/images/logo_iiitl.png",
-                height: 12.h,
-                width: 20.w,),
-                _title(),
-                SizedBox(
-                  height: 80,
-                ),
-                _submitButton(),
-                SizedBox(
-                  height: 20,
-                ),
-                _signUpButton(),
-                SizedBox(
-                  height: 20,
-                ),
-                _label()
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromARGB(255, 12, 167, 238),
+                Color.fromARGB(255, 1, 81, 230),
               ],
             ),
           ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Image.asset(
+                "assets/images/logo_iiitl.png",
+                height: 12.h,
+                width: 20.w,
+              ),
+              _title(),
+              SizedBox(
+                height: 12.h,
+              ),
+              _submitButton(),
+              SizedBox(
+                height: 3.h,
+              ),
+              _signUpButton(),
+              SizedBox(
+                height: 3.h,
+              ),
+              _label(),
+            ],
+          ),
+        ),
       ),
     );
   }
 }
-
-

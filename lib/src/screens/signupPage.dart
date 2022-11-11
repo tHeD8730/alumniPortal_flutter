@@ -76,7 +76,7 @@ class _SignUpPageState extends State<SignUpPage> {
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           SizedBox(
-            height: 10,
+            height: 1.h,
           ),
           TextField(
               obscureText: isPassword,
@@ -113,7 +113,10 @@ class _SignUpPageState extends State<SignUpPage> {
         child: ElevatedButton(
       child: Text(
         'Register Now',
-        style: TextStyle(fontSize: 20, color: Colors.white),
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.white,
+        ),
       ),
       onPressed: _submit,
     ));
@@ -139,7 +142,10 @@ class _SignUpPageState extends State<SignUpPage> {
           children: <Widget>[
             Text(
               'Already have an account ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             SizedBox(
               width: 10,
@@ -172,7 +178,9 @@ class _SignUpPageState extends State<SignUpPage> {
             const TextSpan(
               text: 'Portal',
               style: TextStyle(
-                  color: Color.fromARGB(255, 1, 81, 230), fontSize: 30),
+                color: Color.fromARGB(255, 1, 81, 230),
+                fontSize: 30,
+              ),
             ),
           ]),
     );
@@ -252,23 +260,31 @@ class _SignUpPageState extends State<SignUpPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: height * .2),
+                    SizedBox(
+                      height: height * .2,
+                    ),
                     _title(),
                     SizedBox(
-                      height: 50,
+                      height: 6.h,
                     ),
                     _emailPasswordWidget(),
                     SizedBox(
-                      height: 20,
+                      height: 3.h,
                     ),
                     _submitButton(),
-                    SizedBox(height: height * .14),
+                    SizedBox(
+                      height: height * .14,
+                    ),
                     _loginAccountLabel(),
                   ],
                 ),
               ),
             ),
-            Positioned(top: 40, left: 0, child: _backButton()),
+            Positioned(
+              top: 40,
+              left: 0,
+              child: _backButton(),
+            ),
           ],
         ),
       ),
