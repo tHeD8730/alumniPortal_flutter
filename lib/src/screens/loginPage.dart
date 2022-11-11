@@ -1,4 +1,5 @@
 import 'package:alumni_portal/src/screens/signupPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_login_signup/src/signup.dart';
@@ -16,6 +17,35 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+  late UserCredential _credential;
+  String _Password = '' ; 
+  String _emailAddress = '' ; 
+
+void _submit() async {
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+    try {
+      if (isValid) {
+        _formKey.currentState!.save();
+
+        _credential = await _auth.signInWithEmailAndPassword(
+            email: _emailAddress.trim(), password: _Password.trim());
+      }
+    }
+    // } on PlatformException catch (err) {
+    //   String msg = "An Error occured!";
+    //   if (err.message != null) {
+    //     msg = err.message!;
+    //   }
+    //   print(msg);
+     catch (err) {
+      print(err);
+    }
+  }
+
+
   Widget _backButton() {
     return InkWell(
       onTap: () {
@@ -112,6 +142,8 @@ class _LoginPageState extends State<LoginPage> {
           color: Colors.white,
         ),
       ),
+      onPressed: _submit,
+    )
     );
   }
 
@@ -264,11 +296,43 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _emailPasswordWidget() {
-    return Column(
-      children: <Widget>[
-        _entryField("Email id"),
-        _entryField("Password", isPassword: true),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: <Widget>[
+          TextFormField(
+            onSaved: (newValue) {
+              _emailAddress = newValue!;
+            },
+            validator: (value) {
+              if (value!.isEmpty || !value!.contains('@')) {
+                return 'Please Enter valid Email address';
+              }
+              return null;
+            },
+            keyboardType: TextInputType.emailAddress,
+            decoration: const InputDecoration(
+              label: Text('Email'),
+            ),
+          ),
+
+          TextFormField(
+            onSaved: (newValue) {
+              _Password = newValue!;
+            },
+            validator: (value) {
+              if (value!.isEmpty || value.length < 7) {
+                return 'Password must be 7 characters long';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              label: Text('Password'),
+            ),
+            obscureText: true,
+          )
+        ],
+      ),
     );
   }
 
