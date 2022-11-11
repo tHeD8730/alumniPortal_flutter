@@ -1,34 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../Widget/bezierContainer.dart';
 import 'package:alumni_portal/src/screens/loginPage.dart';
-import 'package:sizer/sizer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key, this.title}) : super(key: key);
 
   final String? title;
-
+  
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _auth = FirebaseAuth.instance;
+  late UserCredential _credential;
   String _fullName = '';
   String _Password = '';
   String _emailAddress = '';
 
-  void _submit() {
+  void _submit() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
-    if (isValid) {
-      _formKey.currentState!.save();
-      print(_fullName);
-      print(_Password);
-      print(_emailAddress);
+    try {
+      if (isValid) {
+        _formKey.currentState!.save();
 
+        _credential = await _auth.createUserWithEmailAndPassword(
+            email: _emailAddress.trim(), password: _Password.trim());
+      }
+    }
+    // } on PlatformException catch (err) {
+    //   String msg = "An Error occured!";
+    //   if (err.message != null) {
+    //     msg = err.message!;
+    //   }
+    //   print(msg);
+     catch (err) {
+      print(err);
     }
   }
 

@@ -4,12 +4,12 @@ import 'package:sizer/sizer.dart';
 import 'package:get/get.dart';
 import 'package:alumni_portal/src/screens/welcomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:alumni_portal/src/screens/uploadScreen.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+void main()async{
+ WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp();
-  runApp(const AlumniPortal());
+    runApp(const AlumniPortal());
 }
 
 class AlumniPortal extends StatefulWidget {
