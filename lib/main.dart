@@ -5,9 +5,7 @@ import 'package:get/get.dart';
 import 'package:alumni_portal/src/screens/welcomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-
 void main()async{
-
  WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp();
@@ -31,7 +29,7 @@ class _AlumniPortalState extends State<AlumniPortal> {
         deviceType,
       ) {
         return GetMaterialApp(
-          home: const SplashScreen(),
+          home: const ImageUploads(),
           routes: {
             'splash': (BuildContext context) => const SplashScreen(),
             'welcome': (BuildContext context) => WelcomePage(),

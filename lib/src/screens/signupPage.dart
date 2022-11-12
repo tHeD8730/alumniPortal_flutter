@@ -261,7 +261,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
-                      height: height * .2,
+                      height: 20.h,
                     ),
                     _title(),
                     SizedBox(
@@ -269,11 +269,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     _emailPasswordWidget(),
                     SizedBox(
-                      height: 3.h,
+                      height: 5.h,
                     ),
                     _submitButton(),
                     SizedBox(
-                      height: height * .14,
+                      height: 27.h,
                     ),
                     _loginAccountLabel(),
                   ],

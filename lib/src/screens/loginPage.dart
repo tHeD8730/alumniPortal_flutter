@@ -356,7 +356,7 @@ void _submit() async {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: height * .2),
+                    SizedBox(height: 20.h),
                     _title(),
                     SizedBox(height: 3.h),
                     _emailPasswordWidget(),
