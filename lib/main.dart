@@ -1,8 +1,10 @@
-import 'package:alumni_portal/src/screens/splashScreen.dart';
+
+import 'package:alumni_portal/src/screens/chatScreen/chatList.dart';
+import 'package:alumni_portal/src/screens/authScreen/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:get/get.dart';
-import 'package:alumni_portal/src/screens/welcomePage.dart';
+import 'package:alumni_portal/src/screens/authScreen/welcomePage.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 
@@ -31,7 +33,7 @@ class _AlumniPortalState extends State<AlumniPortal> {
         deviceType,
       ) {
         return GetMaterialApp(
-          home: const SplashScreen(),
+          home:  SplashScreen(),
           routes: {
             'splash': (BuildContext context) => const SplashScreen(),
             'welcome': (BuildContext context) => WelcomePage(),

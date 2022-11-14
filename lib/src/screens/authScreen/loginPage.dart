@@ -1,10 +1,10 @@
-import 'package:alumni_portal/src/screens/signupPage.dart';
+import 'package:alumni_portal/src/screens/authScreen/signupPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_login_signup/src/signup.dart';
-import '../Widget/bezierContainer.dart';
-import 'package:alumni_portal/src/screens/forgetPasswordScreen.dart';
+// import '../../Widget/bezierContainer.dart';
+import 'package:alumni_portal/src/screens/authScreen/forgetPasswordScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class LoginPage extends StatefulWidget {
@@ -142,8 +142,7 @@ void _submit() async {
           color: Colors.white,
         ),
       ),
-      onPressed: _submit,
-    )
+      // onPressed: _submit,
     );
   }
 
@@ -344,11 +343,11 @@ void _submit() async {
         height: height,
         child: Stack(
           children: <Widget>[
-            Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
+            // Positioned(
+            //   top: -height * .15,
+            //   right: -MediaQuery.of(context).size.width * .4,
+            //   child: BezierContainer(),
+            // ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
