@@ -29,7 +29,7 @@ class _AlumniPortalState extends State<AlumniPortal> {
         deviceType,
       ) {
         return GetMaterialApp(
-          home: const ImageUploads(),
+          home: const SplashScreen(),
           routes: {
             'splash': (BuildContext context) => const SplashScreen(),
             'welcome': (BuildContext context) => WelcomePage(),

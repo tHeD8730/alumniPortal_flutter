@@ -49,6 +49,11 @@ dependencies:
   file_picker:
   path:
   image_picker:
+  open_file:
+  path_provider:
+  dio:
+  dotted_border:
+  iconsax:
 
 dev_dependencies:
   flutter_test:
