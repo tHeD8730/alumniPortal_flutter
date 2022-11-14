@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:alumni_portal/src/screens/welcomePage.dart';
+import 'package:alumni_portal/src/screens/authScreen/welcomePage.dart';
 import 'package:sizer/sizer.dart';
 
 class SplashScreen extends StatefulWidget {

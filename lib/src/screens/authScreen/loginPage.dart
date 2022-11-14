@@ -1,10 +1,10 @@
-import 'package:alumni_portal/src/screens/signupPage.dart';
+import 'package:alumni_portal/src/screens/authScreen/signupPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:flutter_login_signup/src/signup.dart';
-import '../Widget/bezierContainer.dart';
-import 'package:alumni_portal/src/screens/forgetPasswordScreen.dart';
+// import '../../Widget/bezierContainer.dart';
+import 'package:alumni_portal/src/screens/authScreen/forgetPasswordScreen.dart';
 import 'package:sizer/sizer.dart';
 
 class LoginPage extends StatefulWidget {
@@ -52,29 +52,19 @@ void _submit() async {
         Navigator.pop(context);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 10,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 10),
         child: Row(
           children: <Widget>[
             Container(
-              padding: EdgeInsets.only(
-                left: 0,
-                top: 10,
-                bottom: 10,
-              ),
+              padding: EdgeInsets.only(left: 0, top: 10, bottom: 10),
               child: Icon(
                 Icons.keyboard_arrow_left,
                 color: Colors.black,
+                size: 5.h,
               ),
             ),
-            Text(
-              'Back',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ),
-            )
+            // Text('Back',
+            //     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
       ),
@@ -111,125 +101,29 @@ void _submit() async {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(
-          Radius.circular(5),
+      return Container(
+        child: Container(
+      height: 50,
+      width: 50.w,
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            )
         ),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.shade200,
-              offset: Offset(2, 4),
-              blurRadius: 5,
-              spreadRadius: 2)
-        ],
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            Color.fromARGB(255, 12, 167, 238),
-            Color.fromARGB(255, 1, 81, 230),
-          ],
+        child: Text(
+          'Log In',
+          style: TextStyle(
+            fontSize: 20,
+            color: Colors.white,
+          ),
         ),
+        onPressed: _submit,
       ),
-      child: Text(
-        'Login',
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.white,
-        ),
-      ),
-      onPressed: _submit,
-    )
-    );
+    ));
   }
 
-  Widget _divider() {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-            width: 3.w,
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-              ),
-            ),
-          ),
-          Text('or'),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Divider(
-                thickness: 1,
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 3.w,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _facebookButton() {
-    return Container(
-      height: 7.h,
-      margin: EdgeInsets.symmetric(vertical: 20),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xff1959a9),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(5),
-                    topLeft: Radius.circular(5)),
-              ),
-              alignment: Alignment.center,
-              child: Text('f',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 25,
-                      fontWeight: FontWeight.w400)),
-            ),
-          ),
-          Expanded(
-            flex: 5,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Color(0xff2872ba),
-                borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(5),
-                    topRight: Radius.circular(5)),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                'Log in with Facebook',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _createAccountLabel() {
     return InkWell(
@@ -273,25 +167,12 @@ void _submit() async {
   }
 
   Widget _title() {
-    return RichText(
-      textAlign: TextAlign.center,
-      text: TextSpan(
-          text: 'Alumni',
-          style: GoogleFonts.portLligatSans(
-            textStyle: Theme.of(context).textTheme.headline1,
-            fontSize: 30,
-            fontWeight: FontWeight.w700,
-            color: Color.fromARGB(255, 1, 81, 230),
-          ),
-          children: [
-            const TextSpan(
-              text: 'Portal',
-              style: TextStyle(
-                color: Color.fromARGB(255, 1, 81, 230),
-                fontSize: 30,
-              ),
-            ),
-          ]),
+    return Text(
+      'Log In',
+      style: TextStyle(
+        fontSize: 5.h,
+        fontWeight: FontWeight.w400,
+      ),
     );
   }
 
@@ -300,6 +181,19 @@ void _submit() async {
       key: _formKey,
       child: Column(
         children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(bottom: 10),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromARGB(255, 142, 142, 142),
+                width: 2,
+              ),
+              color: Color.fromARGB(217, 254, 254, 250),
+              borderRadius: new BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+              child:
           TextFormField(
             onSaved: (newValue) {
               _emailAddress = newValue!;
@@ -315,7 +209,22 @@ void _submit() async {
               label: Text('Email'),
             ),
           ),
+            ),
+          ),
 
+Container(
+            margin: EdgeInsets.only(bottom: 10),
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Color.fromARGB(255, 142, 142, 142),
+                width: 2,
+              ),
+              color: Color.fromARGB(217, 254, 254, 250),
+              borderRadius: new BorderRadius.circular(15),
+            ),
+            child: Padding(
+              padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+              child:
           TextFormField(
             onSaved: (newValue) {
               _Password = newValue!;
@@ -330,7 +239,9 @@ void _submit() async {
               label: Text('Password'),
             ),
             obscureText: true,
-          )
+          ),
+            ),
+)
         ],
       ),
     );
@@ -344,11 +255,11 @@ void _submit() async {
         height: height,
         child: Stack(
           children: <Widget>[
-            Positioned(
-              top: -height * .15,
-              right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
-            ),
+            // Positioned(
+            //   top: -height * .15,
+            //   right: -MediaQuery.of(context).size.width * .4,
+            //   child: BezierContainer(),
+            // ),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
@@ -356,11 +267,13 @@ void _submit() async {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    SizedBox(height: 20.h),
+                   SizedBox(
+                      height: 20.h,
+                    ),
                     _title(),
-                    SizedBox(height: 3.h),
+                    SizedBox(height: 10.h),
                     _emailPasswordWidget(),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: 4.h),
                     _submitButton(),
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 10),
@@ -379,8 +292,6 @@ void _submit() async {
                         ),
                       ),
                     ),
-                    _divider(),
-                    _facebookButton(),
                     SizedBox(height: height * .055),
                     _createAccountLabel(),
                   ],
