@@ -44,6 +44,16 @@ dependencies:
   connectivity_plus: ^2.3.7
   shared_preferences: ^2.0.15
   local_auth: ^2.1.2
+  firebase_core:
+  firebase_storage:
+  file_picker:
+  path:
+  image_picker:
+  open_file:
+  path_provider:
+  dio:
+  dotted_border:
+  iconsax:
 
 dev_dependencies:
   flutter_test:

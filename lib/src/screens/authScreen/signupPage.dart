@@ -279,20 +279,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: 20.h,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: _title(),
-                    ),
                     SizedBox(
                       height: 6.h,
                     ),
                     _emailPasswordWidget(),
                     SizedBox(
-                      height: 5.h,
+                      height: 3.h,
                     ),
                     _submitButton(),
                     SizedBox(
-                      height: 3.h,
+                      height: height * .14,
                     ),
                     _loginAccountLabel(),
                   ],
