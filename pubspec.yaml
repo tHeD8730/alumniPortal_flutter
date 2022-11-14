@@ -54,6 +54,7 @@ dependencies:
   dio:
   dotted_border:
   iconsax:
+  random_string:
 
 dev_dependencies:
   flutter_test:
