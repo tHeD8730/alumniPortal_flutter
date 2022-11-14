@@ -1,9 +1,17 @@
+import 'package:alumni_portal/src/screens/chatScreen/chatDatabase.dart';
+import 'package:alumni_portal/src/screens/chatScreen/chatListScreen.dart';
+import 'package:alumni_portal/src/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import 'package:alumni_portal/src/screens/authScreen/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+class TheUser {
+  final String uid;
+  TheUser({required this.uid});
+}
 
 class SignUpPage extends StatefulWidget {
   SignUpPage({Key? key, this.title}) : super(key: key);
@@ -23,24 +31,62 @@ class _SignUpPageState extends State<SignUpPage> {
   String _emailAddress = '';
 
   void _submit() async {
+    final FirebaseAuth aut = FirebaseAuth.instance;
+    // create user object based on firebaseUser
+
+    TheUser? _theUserFromFirebaseuser(User user) {
+      return user != null ? TheUser(uid: user.uid) : null;
+    }
+
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     try {
       if (isValid) {
         _formKey.currentState!.save();
 
-        _credential = await _auth.createUserWithEmailAndPassword(
-            email: _emailAddress.trim(), password: _Password.trim());
+        UserCredential result = await _auth.createUserWithEmailAndPassword(
+            email: _emailAddress, password: _Password);
+        User? userDetails = result.user;
+        //return _theUserFromFirebaseuser(user);
+
+        if (result != null) {
+          SharedPreferenceHelper().saveUserEmail(userDetails!.email);
+          SharedPreferenceHelper().saveUserId(userDetails.uid);
+          SharedPreferenceHelper().saveUserName(
+              userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""));
+          SharedPreferenceHelper().saveUserProfileUrl(userDetails.photoURL);
+
+          Map<String, dynamic> userInfoMap = {
+            "userid": userDetails.uid,
+            "email": userDetails.email,
+            "username": userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""),
+            "name": _fullName,
+            "profileUrl":
+                'https://i1.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1',
+          };
+          DatabaseMethods()
+              .addUserinfotodb(userDetails.uid, userInfoMap)
+              .then((s) {
+            // Navigator.pushReplacement(
+            //     context, MaterialPageRoute(builder: (context) => Home()));
+            return _theUserFromFirebaseuser(userDetails);
+          });
+
+          await Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomeChat()));
+        }
       }
-    }
-    // } on PlatformException catch (err) {
-    //   String msg = "An Error occured!";
-    //   if (err.message != null) {
-    //     msg = err.message!;
-    //   }
-    //   print(msg);
-    catch (err) {
-      print(err);
+
+      // } on PlatformException catch (err) {
+      //   String msg = "An Error occured!";
+      //   if (err.message != null) {
+      //     msg = err.message!;
+      //   }
+      //   print(msg);
+
+    } catch (e) {
+      print(e);
+      return null;
     }
   }
 
@@ -101,18 +147,17 @@ class _SignUpPageState extends State<SignUpPage> {
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            )
-        ),
-        child: Text(
+            shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15),
+        )),
+        onPressed: _submit,
+        child: const Text(
           'Register Now',
           style: TextStyle(
             fontSize: 20,
             color: Colors.white,
           ),
         ),
-        onPressed: _submit,
       ),
     ));
   }
@@ -280,7 +325,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: height * .2,
                     ),
-                    _title() ,
+                    _title(),
                     SizedBox(
                       height: 6.h,
                     ),
@@ -293,12 +338,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: height * .14,
                     ),
                     Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          _loginAccountLabel(),
-                        ],
-                      )),
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        _loginAccountLabel(),
+                      ],
+                    )),
                   ],
                 ),
               ),

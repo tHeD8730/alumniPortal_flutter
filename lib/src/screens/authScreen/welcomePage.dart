@@ -1,7 +1,8 @@
 // ignore: file_names
-import 'package:alumni_portal/src/local_auth_api.dart';
 import 'package:alumni_portal/src/screens/authScreen/loginPage.dart';
 import 'package:alumni_portal/src/screens/authScreen/signupPage.dart';
+import 'package:alumni_portal/src/screens/resourceScreen/downloadScreen.dart';
+import 'package:alumni_portal/src/screens/resourceScreen/uploadScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -22,7 +23,7 @@ class _WelcomePageState extends State<WelcomePage> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginPage(),
+            builder: (context) => UploadFile(),
           ),
         );
       },

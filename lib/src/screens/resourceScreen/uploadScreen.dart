@@ -9,6 +9,9 @@ import 'package:iconsax/iconsax.dart';
 import 'package:sizer/sizer.dart';
 
 class UploadFile extends StatefulWidget {
+   UploadFile({Key? key, this.title}) : super(key: key);
+
+  final String? title;
 
   @override
   _UploadFileState createState() => _UploadFileState();

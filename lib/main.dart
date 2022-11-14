@@ -1,5 +1,4 @@
 
-import 'package:alumni_portal/src/screens/chatScreen/chatList.dart';
 import 'package:alumni_portal/src/screens/authScreen/splashScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
