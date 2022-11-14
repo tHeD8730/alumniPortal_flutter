@@ -97,6 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
         child: Container(
       height: 50,
+      width: 50.w,
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
@@ -277,8 +278,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     SizedBox(
-                      height: 20.h,
+                      height: height * .2,
                     ),
+                    _title() ,
                     SizedBox(
                       height: 6.h,
                     ),
@@ -290,7 +292,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: height * .14,
                     ),
-                    _loginAccountLabel(),
+                    Container(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _loginAccountLabel(),
+                        ],
+                      )),
                   ],
                 ),
               ),

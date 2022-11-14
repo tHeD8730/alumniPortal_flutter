@@ -1,62 +1,33 @@
 {
   "project_info": {
-    "project_number": "793223581902",
-    "project_id": "alumniportal-e806a",
-    "storage_bucket": "alumniportal-e806a.appspot.com"
+    "project_number": "337836263521",
+    "project_id": "alumniportal-ce980",
+    "storage_bucket": "alumniportal-ce980.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:793223581902:android:a85ca63ed564c775bf409f",
-        "android_client_info": {
-          "package_name": "com.alumni_portal"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD6WMrcUxyZXTnzyggn1OiTf_skQKWWHyY"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:793223581902:android:00bafb44d26b86fdbf409f",
+        "mobilesdk_app_id": "1:337836263521:android:60182e58140cc7fdb24220",
         "android_client_info": {
           "package_name": "com.example.alumni_portal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
+          "client_id": "337836263521-tl3tp6cu61c71tt7n2l7r09obs51shcc.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyD6WMrcUxyZXTnzyggn1OiTf_skQKWWHyY"
+          "current_key": "AIzaSyBWTOvdddUK8ozC1p0JNBIkjLLY2cPLh3c"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "793223581902-bhgmc0ku25co56t7gl74hj31qe19mbtq.apps.googleusercontent.com",
+              "client_id": "337836263521-tl3tp6cu61c71tt7n2l7r09obs51shcc.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
