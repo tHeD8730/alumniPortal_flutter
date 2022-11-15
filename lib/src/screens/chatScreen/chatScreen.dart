@@ -151,7 +151,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.name),
-        backgroundColor: Colors.indigo[900],
+        backgroundColor: Color.fromARGB(255, 15, 33, 231),
       ),
       body: Form(
         key: _formKey,
@@ -166,9 +166,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 child: Container(
                   padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                   decoration: BoxDecoration(
-                      color: Colors.grey[600]!.withOpacity(0.8),
+                      color: Color.fromARGB(255, 206, 197, 197)!.withOpacity(0.8),
                       border: Border.all(
-                        color: Colors.grey[600]!.withOpacity(0.8),
+                        color: Color.fromARGB(255, 206, 197, 197)!.withOpacity(0.8),
                         width: 0,
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(250))),
@@ -197,6 +197,10 @@ class _ChatScreenState extends State<ChatScreen> {
                             )),
                       )),
                       ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Color.fromARGB(255, 15, 33, 231)
+                          // primary: Colors.grey[600]
+                        ),
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             var chatRoomId = getChatRoomIdbyUsernames(

@@ -12,9 +12,21 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
-  void _sendEmail() async{
-    await FirebaseAuth.instance.sendPasswordResetEmail(
-        email: SharedPreferenceHelper().getUserEmail().toString());
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String? _emailAddress;
+  Future _sendEmail() async {
+    final isValid = _formKey.currentState!.validate();
+    FocusScope.of(context).unfocus();
+    if (isValid) {
+      _formKey.currentState!.save();
+      try {
+        await FirebaseAuth.instance
+            .sendPasswordResetEmail(email: _emailAddress!.trim());
+        // print(_emailAddress);
+      } on FirebaseAuthException catch (e) {
+        print(e.message);
+      }
+    }
   }
 
   @override
@@ -44,21 +56,24 @@ class _ForgetPasswordState extends State<ForgetPassword> {
               ),
               child: Padding(
                 padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-                child: TextFormField(
-                  // onSaved: (newValue) {
-                  //   _Password = newValue!;
-                  // },
-                  validator: (value) {
-                    if (value!.isEmpty || !value!.contains('@')) {
-                      return 'Please Enter valid Email address';
-                    }
-                    return null;
-                  },
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    label: Text('Email'),
+                child: Form(
+                  key: _formKey,
+                  child: TextFormField(
+                    onSaved: (newValue) {
+                      _emailAddress = newValue!;
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty || !value!.contains('@')) {
+                        return 'Please Enter valid Email address';
+                      }
+                      return null;
+                    },
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                      label: Text('Email'),
+                    ),
+                    // obscureText: true,
                   ),
-                  // obscureText: true,
                 ),
               ),
             ),

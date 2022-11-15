@@ -19,7 +19,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
   late UserCredential _credential;
   String _Password = '';
   String _emailAddress = '';
@@ -31,10 +31,15 @@ class _LoginPageState extends State<LoginPage> {
       if (isValid) {
         _formKey.currentState!.save();
 
-        _credential = await _auth.signInWithEmailAndPassword(
-            email: _emailAddress, password: _Password);
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: _emailAddress.trim(), password: _Password.trim());
+        } catch (e) {
+          print(e.toString()); 
+        }
+
         await Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => Home()));
       }
     }
     // } on PlatformException catch (err) {
@@ -249,64 +254,84 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            // Positioned(
-            //   top: -height * .15,
-            //   right: -MediaQuery.of(context).size.width * .4,
-            //   child: BezierContainer(),
-            // ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            // if (snapshot.connectionState == ConnectionState.waiting) {
+            //   return Center(
+            //     child: CircularProgressIndicator(),
+            //   );
+            // } else if (snapshot.hasError) {
+            //   return Center(
+            //     child: Text('Something Went wrong!'),
+            //   );
+            // } else 
+            if (snapshot.hasData) {
+              return Home();
+            } else {
+              return Container(
+                height: height,
+                child: Stack(
                   children: <Widget>[
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    _title(),
-                    SizedBox(height: 10.h),
-                    _emailPasswordWidget(),
-                    SizedBox(height: 4.h),
-                    _submitButton(),
+                    // Positioned(
+                    //   top: -height * .15,
+                    //   right: -MediaQuery.of(context).size.width * .4,
+                    //   child: BezierContainer(),
+                    // ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      alignment: Alignment.centerRight,
-                      child: GestureDetector(
-                        onTap: () {
-                          // Navigator.push(
-                          //     context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
-                        },
-                        child: TextButton(
-                          child: Text('Forgot Password ?',
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          ),
-                          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ForgetPassword()),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 20.h,
+                            ),
+                            _title(),
+                            SizedBox(height: 10.h),
+                            _emailPasswordWidget(),
+                            SizedBox(height: 4.h),
+                            _submitButton(),
+                            Container(
+                              padding: EdgeInsets.symmetric(vertical: 10),
+                              alignment: Alignment.centerRight,
+                              child: GestureDetector(
+                                onTap: () {
+                                  // Navigator.push(
+                                  //     context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
+                                },
+                                child: TextButton(
+                                  child: Text(
+                                    'Forgot Password ?',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  onPressed: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => ForgetPassword()),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: height * .055),
+                            _createAccountLabel(),
+                          ],
                         ),
                       ),
                     ),
+                    Positioned(
+                      top: 40,
+                      left: 0,
+                      child: _backButton(),
                     ),
-                    SizedBox(height: height * .055),
-                    _createAccountLabel(),
                   ],
                 ),
-              ),
-            ),
-            Positioned(
-              top: 40,
-              left: 0,
-              child: _backButton(),
-            ),
-          ],
-        ),
-      ),
+              );
+            }
+          }),
     );
   }
 }

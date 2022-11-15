@@ -1,6 +1,9 @@
 import 'package:alumni_portal/src/screens/chatScreen/chatListScreen.dart';
 import 'package:alumni_portal/src/screens/feeds/allFeed.dart';
+import 'package:alumni_portal/src/screens/resourceScreen/downloadScreen.dart';
+import 'package:alumni_portal/src/side_nav/sideNavBar.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,25 +11,34 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool isHome = true;
   int _currentIndex = 0;
   final List<Widget> _pages = <Widget>[
     AllFeed(),
-    HomeChat(),
+    DownloadFile(),
     HomeChat(),
   ];
 
   void _onTapTapped(int index) {
     setState(() {
       _currentIndex = index;
+      if (_currentIndex != 0)
+        isHome = false;
+      else
+        isHome = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: isHome 
+      ?const SideNav():
+      null,
       bottomNavigationBar: BottomNavigationBar(
-        iconSize: 30,
-        selectedIconTheme: IconThemeData(color: Colors.indigo[900], size: 40),
+        iconSize: 4.h,
+        selectedIconTheme:
+            IconThemeData(color: Color.fromARGB(255, 15, 33, 231), size: 40),
         showSelectedLabels: false,
         showUnselectedLabels: false,
         // this will be set when a new tab is tapped
@@ -47,40 +59,44 @@ class _HomeState extends State<Home> {
         currentIndex: _currentIndex,
         onTap: _onTapTapped,
       ),
-      appBar: AppBar(
-        backgroundColor: Colors.indigo[900],
-        title: Text(
-          'WithU',
-          style: TextStyle(color: Colors.deepPurple[50]),
-        ),
-        actions: [
-          InkWell(
-            onTap: () {
-              // AuthServies().logout().then((s) {
-              //   Navigator.pushReplacement(
-              //       context, MaterialPageRoute(builder: (context) => SignIn()));
-              // });
-            },
-            child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Icon(
-                  Icons.exit_to_app,
-                  color: Colors.deepPurple[50],
-                )),
-          )
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/pur7.png"), // <-- BACKGROUND IMAGE
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Center(
-          child: _pages.elementAt(_currentIndex),
-        ),
-      ),
+      appBar: isHome
+          ? AppBar(
+              backgroundColor: Color.fromARGB(255, 15, 33, 231),
+              title: Text(
+                'AlumniPortal',
+                style: TextStyle(color: Colors.deepPurple[50]),
+              ),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HomeChat(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.chat,
+                      color: Colors.deepPurple[50],
+                    )),
+              ],
+            )
+          :null,
+      body: _pages.elementAt(_currentIndex),
+      // Container(
+      // decoration: BoxDecoration(
+      //   image: DecorationImage(
+      //     image: AssetImage("assets/images/pur7.png"), // <-- BACKGROUND IMAGE
+      //     fit: BoxFit.cover,
+      //   ),
+      // ),
+      // child: Center(
+      // child:
+      //  _pages.elementAt(_currentIndex),
+      // ),
+      // ),
     );
   }
 }

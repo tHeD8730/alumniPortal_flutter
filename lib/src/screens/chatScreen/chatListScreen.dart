@@ -3,8 +3,11 @@ import 'package:alumni_portal/src/screens/chatScreen/chatScreen.dart';
 import 'package:alumni_portal/src/helper/sharedPref.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class HomeChat extends StatefulWidget {
+   HomeChat({Key? key, this.title}) : super(key: key);
+   final String? title;
   @override
   _HomeChatState createState() => _HomeChatState();
 }
@@ -157,6 +160,7 @@ class _HomeChatState extends State<HomeChat> {
         title: Text(
           'Chats'
         ),
+        backgroundColor: Color.fromARGB(255, 15, 33, 231),
       ),
       body: Container(
         margin: EdgeInsets.symmetric(horizontal: 20),
@@ -194,7 +198,7 @@ class _HomeChatState extends State<HomeChat> {
                             child: TextField(
                           controller: searcheditingcontoroller,
                           decoration: InputDecoration(
-                              border: InputBorder.none, hintText: "Username"),
+                              border: InputBorder.none, hintText: "Search by Username"),
                         )),
                         GestureDetector(
                             onTap: () {
@@ -208,6 +212,10 @@ class _HomeChatState extends State<HomeChat> {
                   ),
                 ),
               ],
+            ),
+            Divider(
+               height: 1.h,
+              
             ),
             isSearching
                 ? Expanded(child: searchUsersList())
