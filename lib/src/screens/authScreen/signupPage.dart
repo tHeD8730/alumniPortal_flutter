@@ -3,12 +3,14 @@ import 'package:alumni_portal/src/screens/chatScreen/chatDatabase.dart';
 import 'package:alumni_portal/src/screens/chatScreen/chatListScreen.dart';
 import 'package:alumni_portal/src/screens/homePage.dart';
 import 'package:alumni_portal/src/helper/sharedPref.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import 'package:alumni_portal/src/screens/authScreen/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 
 class TheUser {
   final String uid;
@@ -31,65 +33,85 @@ class _SignUpPageState extends State<SignUpPage> {
   String _fullName = '';
   String _Password = '';
   String _emailAddress = '';
+  String? myId;
 
-  void _submit() async {
-    final FirebaseAuth aut = FirebaseAuth.instance;
-    // create user object based on firebaseUser
+  Future _submit() async {
+    // final FirebaseAuth aut = FirebaseAuth.instance;
+    // // create user object based on firebaseUser
 
-    TheUser? _theUserFromFirebaseuser(User user) {
-      return user != null ? TheUser(uid: user.uid) : null;
-    }
+    // TheUser? _theUserFromFirebaseuser(User user) {
+    //   return user != null ? TheUser(uid: user.uid) : null;
+    // }
 
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
-    try {
-      if (isValid) {
-        _formKey.currentState!.save();
+    if (isValid) {
+      _formKey.currentState!.save();
 
-        UserCredential result = await _auth.createUserWithEmailAndPassword(
-            email: _emailAddress, password: _Password);
-        User? userDetails = result.user;
-        //return _theUserFromFirebaseuser(user);
+      try {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailAddress.trim(), password: _Password.trim());
+        try {
+          myId = await _auth.currentUser!.uid;
 
-        if (result != null) {
-          SharedPreferenceHelper().saveUserEmail(userDetails!.email);
-          SharedPreferenceHelper().saveUserId(userDetails.uid);
-          SharedPreferenceHelper().saveUserName(
-              userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""));
-          SharedPreferenceHelper().saveUserProfileUrl(userDetails.photoURL);
-
-          Map<String, dynamic> userInfoMap = {
-            "userid": userDetails.uid,
-            "email": userDetails.email,
-            "username": userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""),
-            "name": _fullName,
-            "profileUrl":
-                'https://i1.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1',
-          };
-          DatabaseMethods()
-              .addUserinfotodb(userDetails.uid, userInfoMap)
-              .then((s) {
-            // Navigator.pushReplacement(
-            //     context, MaterialPageRoute(builder: (context) => Home()));
-            return _theUserFromFirebaseuser(userDetails);
-          });
-
-          await Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => EmailVerification()));
+          try {
+            await FirebaseFirestore.instance.collection("users").doc(myId).set({
+              'name': _fullName,
+              'id' : myId
+            });
+          } on FirebaseAuthException catch (e) {
+            print(e);
+          }
+        } on FirebaseAuthException catch (e) {
+          print(e);
         }
+      } on FirebaseAuthException catch (e) {
+        print(e);
+        // Utils.showSnackBar(e.message);
       }
+      // User? userDetails = result.user;
+      // //return _theUserFromFirebaseuser(user);
 
-      // } on PlatformException catch (err) {
-      //   String msg = "An Error occured!";
-      //   if (err.message != null) {
-      //     msg = err.message!;
-      //   }
-      //   print(msg);
+      // if (result != null) {
+      //   SharedPreferenceHelper().saveUserEmail(userDetails!.email);
+      //   SharedPreferenceHelper().saveUserId(userDetails.uid);
+      //   SharedPreferenceHelper().saveUserName(
+      //       userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""));
+      //   SharedPreferenceHelper().saveUserProfileUrl(userDetails.photoURL);
+      //   SharedPreferenceHelper().saveDisplayName(_fullName);
 
-    } catch (e) {
-      print(e);
-      return null;
+      //   Map<String, dynamic> userInfoMap = {
+      //     "userid": userDetails.uid,
+      //     "email": userDetails.email,
+      //     "username": userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""),
+      //     "name": _fullName,
+      //     "profileUrl":
+      //         'https://i1.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1',
+      //   };
+      //   DatabaseMethods()
+      //       .addUserinfotodb(userDetails.uid, userInfoMap)
+      //       .then((s) {
+      //     // Navigator.pushReplacement(
+      //     //     context, MaterialPageRoute(builder: (context) => Home()));
+      //     return _theUserFromFirebaseuser(userDetails);
+      //   });
+
+      //   await Navigator.pushReplacement(context,
+      //       MaterialPageRoute(builder: (context) => EmailVerification()));
+      // }
     }
+
+    // } on PlatformException catch (err) {
+    //   String msg = "An Error occured!";
+    //   if (err.message != null) {
+    //     msg = err.message!;
+    //   }
+    //   print(msg);
+
+    // } catch (e) {
+    //   print(e);
+    //   return null;
+    // }
   }
 
   Widget _backButton() {
@@ -308,56 +330,59 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            // Positioned(
-            //   top: -MediaQuery.of(context).size.height * .15,
-            //   right: -MediaQuery.of(context).size.width * .4,
-
-            // ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return EmailVerification();
+            } else {
+              return Container(
+                height: height,
+                child: Stack(
                   children: <Widget>[
-                    SizedBox(
-                      height: height * .2,
-                    ),
-                    _title(),
-                    SizedBox(
-                      height: 6.h,
-                    ),
-                    _emailPasswordWidget(),
-                    SizedBox(
-                      height: 3.h,
-                    ),
-                    _submitButton(),
-                    SizedBox(
-                      height: height * .14,
-                    ),
                     Container(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: SingleChildScrollView(
                         child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _loginAccountLabel(),
-                      ],
-                    )),
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            SizedBox(
+                              height: height * .2,
+                            ),
+                            _title(),
+                            SizedBox(
+                              height: 6.h,
+                            ),
+                            _emailPasswordWidget(),
+                            SizedBox(
+                              height: 3.h,
+                            ),
+                            _submitButton(),
+                            SizedBox(
+                              height: height * .14,
+                            ),
+                            Container(
+                                child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                _loginAccountLabel(),
+                              ],
+                            )),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 40,
+                      left: 0,
+                      child: _backButton(),
+                    ),
                   ],
                 ),
-              ),
-            ),
-            Positioned(
-              top: 40,
-              left: 0,
-              child: _backButton(),
-            ),
-          ],
-        ),
-      ),
+              );
+            }
+          }),
     );
   }
 }
