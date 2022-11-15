@@ -88,11 +88,16 @@
 
 //======================
 
+import 'package:alumni_portal/src/screens/resourceScreen/uploadScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:alumni_portal/src/download/firebase_api.dart';
 import 'package:alumni_portal/src/download/firebase_file.dart';
 import 'package:alumni_portal/src/download/image_page.dart';
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
+
+import '../chatScreen/chatListScreen.dart';
+import '../feeds/allFeed.dart';
 
 class DownloadFile extends StatefulWidget {
   const DownloadFile({Key? key}) : super(key: key);
@@ -103,6 +108,19 @@ class DownloadFile extends StatefulWidget {
 
 class _DownloadFileState extends State<DownloadFile> {
   late Future<List<FirebaseFile>> futureFiles;
+  int _currentIndex = 1;
+  final List<Widget> _pages = <Widget>[
+    AllFeed(),
+    DownloadFile(),
+    HomeChat(),
+  ];
+
+  void _onTapTapped(int index) {
+    setState(() {
+      // print(index);
+      _currentIndex = index;
+    });
+  }
 
   @override
   void initState() {
@@ -112,9 +130,46 @@ class _DownloadFileState extends State<DownloadFile> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        // bottomNavigationBar: BottomNavigationBar(
+        //   iconSize: 4.h,
+        //   selectedIconTheme:
+        //       IconThemeData(color: Color.fromARGB(255, 15, 33, 231), size: 40),
+        //   showSelectedLabels: false,
+        //   showUnselectedLabels: false,
+        //   // this will be set when a new tab is tapped
+        //   items: const <BottomNavigationBarItem>[
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.home),
+        //       label: 'Feed',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.document_scanner),
+        //       label: 'Resources',
+        //     ),
+        //     BottomNavigationBarItem(
+        //       icon: Icon(Icons.person),
+        //       label: 'Profile',
+        //     ),
+        //   ],
+        //   currentIndex: _currentIndex,
+        //   onTap: _onTapTapped,
+        // ),
         appBar: AppBar(
-          title: Text('Download'),
+          title: Text('Downloads'),
+          automaticallyImplyLeading: false,
           centerTitle: true,
+          backgroundColor: Color.fromARGB(255, 15, 33, 231),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UploadFile(),
+                      ));
+                },
+                icon: Icon(Icons.upload_file))
+          ],
         ),
         body: FutureBuilder<List<FirebaseFile>>(
           future: futureFiles,
@@ -164,7 +219,7 @@ class _DownloadFileState extends State<DownloadFile> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             decoration: TextDecoration.underline,
-            color: Colors.blue,
+            color: Color.fromARGB(255, 11, 11, 11),
           ),
         ),
         onTap: () => Navigator.of(context).push(MaterialPageRoute(
@@ -173,13 +228,13 @@ class _DownloadFileState extends State<DownloadFile> {
       );
 
   Widget buildHeader(int length) => ListTile(
-        tileColor: Colors.blue,
+        tileColor: Color.fromARGB(255, 221, 221, 221),
         leading: Container(
           width: 52,
           height: 52,
           child: Icon(
             Icons.file_copy,
-            color: Colors.white,
+            color: Color.fromARGB(255, 12, 12, 12),
           ),
         ),
         title: Text(
@@ -187,7 +242,7 @@ class _DownloadFileState extends State<DownloadFile> {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
-            color: Colors.white,
+            color: Color.fromARGB(255, 7, 7, 7),
           ),
         ),
       );

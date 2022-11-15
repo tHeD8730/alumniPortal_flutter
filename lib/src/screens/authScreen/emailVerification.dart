@@ -22,7 +22,6 @@ class _EmailVerificationState extends State<EmailVerification> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     _isVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     if (_isVerified == false) {
       _sendVerificationEmail();
@@ -32,6 +31,7 @@ class _EmailVerificationState extends State<EmailVerification> {
         (_) => checkEmailVerified(),
       );
     }
+    super.initState();
   }
 
   Future checkEmailVerified() async {
