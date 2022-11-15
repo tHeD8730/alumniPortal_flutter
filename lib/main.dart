@@ -30,7 +30,7 @@ class _AlumniPortalState extends State<AlumniPortal> {
         deviceType,
       ) {
         return GetMaterialApp(
-          home:  SplashScreen(),
+          home:  const SplashScreen(),
           routes: {
             'splash': (BuildContext context) => const SplashScreen(),
             'welcome': (BuildContext context) => WelcomePage(),

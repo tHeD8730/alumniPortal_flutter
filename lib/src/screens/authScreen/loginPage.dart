@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         _formKey.currentState!.save();
 
         _credential = await _auth.signInWithEmailAndPassword(
-            email: _emailAddress.trim(), password: _Password.trim());
+            email: _emailAddress, password: _Password);
         await Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => Home()));
       }

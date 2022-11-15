@@ -33,7 +33,6 @@ class _SignUpPageState extends State<SignUpPage> {
   String _emailAddress = '';
 
   void _submit() async {
-    final FirebaseAuth aut = FirebaseAuth.instance;
     // create user object based on firebaseUser
 
     TheUser? _theUserFromFirebaseuser(User user) {
