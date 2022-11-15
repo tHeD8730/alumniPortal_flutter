@@ -1,6 +1,6 @@
 import 'package:alumni_portal/src/screens/chatScreen/chatDatabase.dart';
 import 'package:alumni_portal/src/screens/chatScreen/chatScreen.dart';
-import 'package:alumni_portal/src/sharedPref.dart';
+import 'package:alumni_portal/src/helper/sharedPref.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 

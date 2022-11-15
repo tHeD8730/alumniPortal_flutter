@@ -1,6 +1,8 @@
+import 'package:alumni_portal/src/screens/authScreen/emailVerification.dart';
 import 'package:alumni_portal/src/screens/chatScreen/chatDatabase.dart';
 import 'package:alumni_portal/src/screens/chatScreen/chatListScreen.dart';
-import 'package:alumni_portal/src/sharedPref.dart';
+import 'package:alumni_portal/src/screens/homePage.dart';
+import 'package:alumni_portal/src/helper/sharedPref.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,7 +75,7 @@ class _SignUpPageState extends State<SignUpPage> {
           });
 
           await Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomeChat()));
+              context, MaterialPageRoute(builder: (context) => EmailVerification()));
         }
       }
 

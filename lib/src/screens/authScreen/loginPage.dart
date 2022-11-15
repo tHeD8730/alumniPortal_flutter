@@ -1,4 +1,5 @@
 import 'package:alumni_portal/src/screens/authScreen/signupPage.dart';
+import 'package:alumni_portal/src/screens/homePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,10 +21,10 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   late UserCredential _credential;
-  String _Password = '' ; 
-  String _emailAddress = '' ; 
+  String _Password = '';
+  String _emailAddress = '';
 
-void _submit() async {
+  void _submit() async {
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     try {
@@ -32,6 +33,8 @@ void _submit() async {
 
         _credential = await _auth.signInWithEmailAndPassword(
             email: _emailAddress.trim(), password: _Password.trim());
+        await Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Home()));
       }
     }
     // } on PlatformException catch (err) {
@@ -40,11 +43,10 @@ void _submit() async {
     //     msg = err.message!;
     //   }
     //   print(msg);
-     catch (err) {
+    catch (err) {
       print(err);
     }
   }
-
 
   Widget _backButton() {
     return InkWell(
@@ -101,29 +103,28 @@ void _submit() async {
   }
 
   Widget _submitButton() {
-      return Container(
+    return Container(
         child: Container(
       height: 50,
       width: 50.w,
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            )
-        ),
-        child: Text(
-          'Log In',
-          style: TextStyle(
-            fontSize: 20,
-            color: Colors.white,
+          style: ElevatedButton.styleFrom(
+              shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          )),
+          child: Text(
+            'Log In',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
-        ),
-        onPressed: _submit,
-      ),
+          onPressed: (() {
+            _submit();
+          })),
     ));
   }
-
 
   Widget _createAccountLabel() {
     return InkWell(
@@ -193,26 +194,24 @@ void _submit() async {
             ),
             child: Padding(
               padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-              child:
-          TextFormField(
-            onSaved: (newValue) {
-              _emailAddress = newValue!;
-            },
-            validator: (value) {
-              if (value!.isEmpty || !value!.contains('@')) {
-                return 'Please Enter valid Email address';
-              }
-              return null;
-            },
-            keyboardType: TextInputType.emailAddress,
-            decoration: const InputDecoration(
-              label: Text('Email'),
+              child: TextFormField(
+                onSaved: (newValue) {
+                  _emailAddress = newValue!;
+                },
+                validator: (value) {
+                  if (value!.isEmpty || !value!.contains('@')) {
+                    return 'Please Enter valid Email address';
+                  }
+                  return null;
+                },
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(
+                  label: Text('Email'),
+                ),
+              ),
             ),
           ),
-            ),
-          ),
-
-Container(
+          Container(
             margin: EdgeInsets.only(bottom: 10),
             decoration: BoxDecoration(
               border: Border.all(
@@ -224,24 +223,23 @@ Container(
             ),
             child: Padding(
               padding: EdgeInsets.only(left: 15, right: 15, top: 5),
-              child:
-          TextFormField(
-            onSaved: (newValue) {
-              _Password = newValue!;
-            },
-            validator: (value) {
-              if (value!.isEmpty || value.length < 7) {
-                return 'Password must be 7 characters long';
-              }
-              return null;
-            },
-            decoration: const InputDecoration(
-              label: Text('Password'),
+              child: TextFormField(
+                onSaved: (newValue) {
+                  _Password = newValue!;
+                },
+                validator: (value) {
+                  if (value!.isEmpty || value.length < 7) {
+                    return 'Password must be 7 characters long';
+                  }
+                  return null;
+                },
+                decoration: const InputDecoration(
+                  label: Text('Password'),
+                ),
+                obscureText: true,
+              ),
             ),
-            obscureText: true,
-          ),
-            ),
-)
+          )
         ],
       ),
     );
@@ -267,7 +265,7 @@ Container(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                   SizedBox(
+                    SizedBox(
                       height: 20.h,
                     ),
                     _title(),
@@ -283,14 +281,17 @@ Container(
                           // Navigator.push(
                           //     context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
                         },
-                        child: Text(
-                          'Forgot Password ?',
+                        child: TextButton(
+                          child: Text('Forgot Password ?',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
+                          ),
+                          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>ForgetPassword()),
                         ),
                       ),
+                    ),
                     ),
                     SizedBox(height: height * .055),
                     _createAccountLabel(),
