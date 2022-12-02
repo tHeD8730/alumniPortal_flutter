@@ -1,10 +1,14 @@
 import 'package:alumni_portal/src/helper/sharedPref.dart';
+import 'package:alumni_portal/src/screens/Appointments/appointment.dart';
+import 'package:alumni_portal/src/screens/profileScreen/Profilepage.dart';
+import 'package:alumni_portal/src/screens/profileScreen/editProfile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SideNav extends StatefulWidget {
   const SideNav({super.key});
@@ -14,18 +18,26 @@ class SideNav extends StatefulWidget {
 }
 
 class _SideNavState extends State<SideNav> {
-  String? name = "Loading", profileURL="";
+  String? name = "Loading", profileURL = "";
+  String _url = "https://iiitl.ac.in/";
 
   Future<void> getdeatils() async {
-    FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection("users")
         .doc((await FirebaseAuth.instance.currentUser!).uid)
         .get()
         .then((value) {
       setState(() {
         name = value.data()!["name"].toString();
+        profileURL = value.data()!["profilePicUrl"].toString();
       });
     });
+  }
+
+  Future<void> _launchUrl() async {
+    if (!await launchUrl(Uri.parse(_url))) {
+      throw 'Could not launch $_url';
+    }
   }
 
   @override
@@ -47,34 +59,30 @@ class _SideNavState extends State<SideNav> {
               SizedBox(
                 height: 6.h,
               ),
-             Container(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(50),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 15, 33, 231),
-                        ),
-                        child: CachedNetworkImage(
-                          height: 12.h,
-                          width: 12.h,
-                          imageUrl: profileURL!,
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.person),
-                          placeholder: (context, url) =>
-                              const Center(child: Icon(Icons.person)),
-                        ),
-                      ),
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Container(
+                    child: CachedNetworkImage(
+                      height: 12.h,
+                      width: 12.h,
+                      imageUrl: profileURL!,
+                      fit: BoxFit.cover,
+                      errorWidget: (context, url, error) =>
+                          Image.asset('assets/images/user_default.jpg'),
+                      placeholder: (context, url) =>
+                          const Center(child: Icon(Icons.person)),
                     ),
                   ),
-                   SizedBox(
+                ),
+              ),
+              SizedBox(
                 height: 3.h,
               ),
-              Text(name! , 
-                  style: TextStyle(
-                    fontSize: 12.sp ,
-                    fontWeight: FontWeight.w600
-                  ),),
+              Text(
+                name!,
+                style: TextStyle(fontSize: 12.sp, fontWeight: FontWeight.w600),
+              ),
               SizedBox(
                 height: 4.h,
               ),
@@ -94,12 +102,11 @@ class _SideNavState extends State<SideNav> {
                   style: TextStyle(color: Colors.black87, fontSize: 12.sp),
                 ),
                 onTap: () {
-                  // Navigator.of(context).pop();
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) =>const ProfileEditScreen()),
-                  // );
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EditProfile()),
+                  );
                 },
               ),
               Divider(
@@ -118,31 +125,31 @@ class _SideNavState extends State<SideNav> {
                   style: TextStyle(color: Colors.black87, fontSize: 12.sp),
                 ),
                 onTap: () {
-                  // Navigator.of(context).pop();
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //       builder: (context) =>const AccountList()),
-                  // );
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Appointment()),
+                  );
                 },
               ),
               Divider(
                 height: 2.h,
               ),
               ListTile(
-                  contentPadding: EdgeInsets.only(left: 8.w),
-                  minLeadingWidth: 5.w,
-                  leading: Container(
-                    padding: EdgeInsets.only(top: .5.h),
-                    child: Icon(Icons.web),
-                    // height: 2.5.h,),
-                  ),
-                  title: Text(
-                    'Website',
-                    style: TextStyle(color: Colors.black87, fontSize: 12.sp),
-                  )
-                  // ontap function required here
-                  ),
+                contentPadding: EdgeInsets.only(left: 8.w),
+                minLeadingWidth: 5.w,
+                leading: Container(
+                  padding: EdgeInsets.only(top: .5.h),
+                  child: Icon(Icons.web),
+                  // height: 2.5.h,),
+                ),
+                title: Text(
+                  'Website',
+                  style: TextStyle(color: Colors.black87, fontSize: 12.sp),
+                ),
+                onTap: () => _launchUrl(),
+              ),
               Divider(
                 height: 2.h,
               ),
@@ -179,7 +186,8 @@ class _SideNavState extends State<SideNav> {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
                   // ignore: avoid_redundant_argument_values
-                  side: const BorderSide(width: 1, color: Color.fromARGB(255, 15, 33, 231)),
+                  side: const BorderSide(
+                      width: 1, color: Color.fromARGB(255, 15, 33, 231)),
                   backgroundColor: Colors.white,
                 ),
                 icon: Icon(

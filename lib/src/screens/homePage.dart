@@ -1,7 +1,9 @@
 import 'package:alumni_portal/src/screens/chatScreen/chatListScreen.dart';
 import 'package:alumni_portal/src/screens/feeds/allFeed.dart';
+import 'package:alumni_portal/src/screens/profileScreen/Profilepage.dart';
 import 'package:alumni_portal/src/screens/resourceScreen/downloadScreen.dart';
 import 'package:alumni_portal/src/side_nav/sideNavBar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -16,7 +18,9 @@ class _HomeState extends State<Home> {
   final List<Widget> _pages = <Widget>[
     AllFeed(),
     DownloadFile(),
-    HomeChat(),
+    Profilepage(
+      userUID: FirebaseAuth.instance.currentUser!.uid,
+    ),
   ];
 
   void _onTapTapped(int index) {
@@ -32,9 +36,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: isHome 
-      ?const SideNav():
-      null,
+      drawer: isHome ? const SideNav() : null,
       bottomNavigationBar: BottomNavigationBar(
         iconSize: 4.h,
         selectedIconTheme:
@@ -83,7 +85,7 @@ class _HomeState extends State<Home> {
                     )),
               ],
             )
-          :null,
+          : null,
       body: _pages.elementAt(_currentIndex),
       // Container(
       // decoration: BoxDecoration(

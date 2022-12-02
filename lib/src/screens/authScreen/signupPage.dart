@@ -2,7 +2,6 @@ import 'package:alumni_portal/src/screens/authScreen/emailVerification.dart';
 import 'package:alumni_portal/src/screens/chatScreen/chatDatabase.dart';
 import 'package:alumni_portal/src/screens/chatScreen/chatListScreen.dart';
 import 'package:alumni_portal/src/screens/homePage.dart';
-import 'package:alumni_portal/src/helper/sharedPref.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +9,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 import 'package:alumni_portal/src/screens/authScreen/loginPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 
 class TheUser {
   final String uid;
@@ -30,19 +28,18 @@ class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
   late UserCredential _credential;
-  String _fullName = '';
-  String _Password = '';
-  String _emailAddress = '';
-  String? myId;
+  String _fullName = '', _Password = '', _emailAddress = '';
+  String? myId,
+      profilePicUrl,
+      currentCompany,
+      graduationYear,
+      role,
+      github,
+      linkedIn,
+      codeforces,
+      codechef;
 
   Future _submit() async {
-    // final FirebaseAuth aut = FirebaseAuth.instance;
-    // // create user object based on firebaseUser
-
-    // TheUser? _theUserFromFirebaseuser(User user) {
-    //   return user != null ? TheUser(uid: user.uid) : null;
-    // }
-
     final isValid = _formKey.currentState!.validate();
     FocusScope.of(context).unfocus();
     if (isValid) {
@@ -57,61 +54,27 @@ class _SignUpPageState extends State<SignUpPage> {
           try {
             await FirebaseFirestore.instance.collection("users").doc(myId).set({
               'name': _fullName,
-              'id' : myId
+              'id': myId,
+              'email': _emailAddress.trim(),
+              'profilePicUrl': profilePicUrl,
+              'currentCompany': currentCompany,
+              'graduationYear': graduationYear,
+              'role': role,
+              'github': github,
+              'linkedIn': linkedIn,
+              'codeforces': codeforces,
+              'codechef': codechef
             });
           } on FirebaseAuthException catch (e) {
-            print(e);
+            _showMyDialog(context, e.message.toString());
           }
         } on FirebaseAuthException catch (e) {
-          print(e);
+          _showMyDialog(context, e.message.toString());
         }
       } on FirebaseAuthException catch (e) {
-        print(e);
-        // Utils.showSnackBar(e.message);
+        _showMyDialog(context, e.message.toString());
       }
-      // User? userDetails = result.user;
-      // //return _theUserFromFirebaseuser(user);
-
-      // if (result != null) {
-      //   SharedPreferenceHelper().saveUserEmail(userDetails!.email);
-      //   SharedPreferenceHelper().saveUserId(userDetails.uid);
-      //   SharedPreferenceHelper().saveUserName(
-      //       userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""));
-      //   SharedPreferenceHelper().saveUserProfileUrl(userDetails.photoURL);
-      //   SharedPreferenceHelper().saveDisplayName(_fullName);
-
-      //   Map<String, dynamic> userInfoMap = {
-      //     "userid": userDetails.uid,
-      //     "email": userDetails.email,
-      //     "username": userDetails.email?.replaceFirst(RegExp(r"\.[^]*"), ""),
-      //     "name": _fullName,
-      //     "profileUrl":
-      //         'https://i1.wp.com/researchictafrica.net/wp/wp-content/uploads/2016/10/default-profile-pic.jpg?ssl=1',
-      //   };
-      //   DatabaseMethods()
-      //       .addUserinfotodb(userDetails.uid, userInfoMap)
-      //       .then((s) {
-      //     // Navigator.pushReplacement(
-      //     //     context, MaterialPageRoute(builder: (context) => Home()));
-      //     return _theUserFromFirebaseuser(userDetails);
-      //   });
-
-      //   await Navigator.pushReplacement(context,
-      //       MaterialPageRoute(builder: (context) => EmailVerification()));
-      // }
     }
-
-    // } on PlatformException catch (err) {
-    //   String msg = "An Error occured!";
-    //   if (err.message != null) {
-    //     msg = err.message!;
-    //   }
-    //   print(msg);
-
-    // } catch (e) {
-    //   print(e);
-    //   return null;
-    // }
   }
 
   Widget _backButton() {
@@ -131,8 +94,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 size: 5.h,
               ),
             ),
-            // Text('Back',
-            //     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
       ),
@@ -171,9 +132,10 @@ class _SignUpPageState extends State<SignUpPage> {
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+            backgroundColor: Color.fromARGB(255, 1, 81, 230),
             shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        )),
+              borderRadius: BorderRadius.circular(15),
+            )),
         onPressed: _submit,
         child: const Text(
           'Register Now',
@@ -344,8 +306,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: SingleChildScrollView(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             SizedBox(
                               height: height * .2,
@@ -362,13 +324,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             SizedBox(
                               height: height * .14,
                             ),
-                            Container(
-                                child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                _loginAccountLabel(),
-                              ],
-                            )),
+                            Align(
+                                alignment: Alignment.bottomCenter,
+                                child: _loginAccountLabel()),
                           ],
                         ),
                       ),
@@ -385,4 +343,32 @@ class _SignUpPageState extends State<SignUpPage> {
           }),
     );
   }
+}
+
+Future<void> _showMyDialog(BuildContext context, String err) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible:
+        false, //this means the user must tap a button to exit the Alert Dialog
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(err),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
