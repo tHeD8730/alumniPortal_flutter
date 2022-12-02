@@ -1,7 +1,7 @@
 import 'dart:async';
-
-import 'package:alumni_portal/src/helper/sharedPref.dart';
 import 'package:alumni_portal/src/screens/homePage.dart';
+
+import 'package:alumni_portal/src/screens/profileScreen/editProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -39,7 +39,15 @@ class _EmailVerificationState extends State<EmailVerification> {
     setState(() {
       _isVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     });
-    if (_isVerified) timer?.cancel();
+    if (_isVerified) {
+      timer?.cancel();
+      Navigator.of(context).pop();
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => EditProfile()),
+      );
+    }
   }
 
   @override
@@ -58,7 +66,7 @@ class _EmailVerificationState extends State<EmailVerification> {
           .then((value) => print('Successfully sent email verification'));
       ;
     } catch (e) {
-      print(e.toString());
+      _showMyDialog(context, e.toString());
     }
   }
 
@@ -123,4 +131,32 @@ class _EmailVerificationState extends State<EmailVerification> {
             CircularProgressIndicator(),
           ]),
         );
+}
+
+Future<void> _showMyDialog(BuildContext context, String err) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible:
+        false, //this means the user must tap a button to exit the Alert Dialog
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(err),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

@@ -43,6 +43,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   google_fonts: ^3.0.1
   get: 4.6.5
+  flutter_email_sender: ^5.2.0
   connectivity_plus: ^2.3.7
   shared_preferences: ^2.0.15
   local_auth: ^2.1.2
@@ -50,13 +51,16 @@ dependencies:
   firebase_storage:
   file_picker:
   path:
-  image_picker:
-  open_file:
+  image_picker: ^0.8.3+3
   path_provider:
+  intl: ^0.17.0
+  fluttertoast: ^8.1.1
   dio:
   dotted_border:
   iconsax:
   random_string:
+  url_launcher: ^6.1.6
+  date_format:
 
 dev_dependencies:
   flutter_test:

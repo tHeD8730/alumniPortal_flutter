@@ -1,10 +1,13 @@
 import 'dart:io';
-import 'package:alumni_portal/src/helper/curd.dart';
+import 'package:alumni_portal/src/helper/sharedPref.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:random_string/random_string.dart';
+import 'package:sizer/sizer.dart';
 
 class UploadMyFeed extends StatefulWidget {
   @override
@@ -12,152 +15,167 @@ class UploadMyFeed extends StatefulWidget {
 }
 
 class _UploadMyFeedState extends State<UploadMyFeed> {
-  //
-  late File selectedImage;
-  ImagePicker _picker = ImagePicker();
+  String? myProfilePic, author, currentCompany;
 
-  bool isLoading = false;
-
-  CrudMethods crudMethods = new CrudMethods();
-
-  Future getImage() async {
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
-
-    setState(() {
-      if (pickedFile != null) {
-        selectedImage = File(pickedFile.path);
-      } else {
-        print('No image selected.');
-      }
+  Future<void> _getUserDetails() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc((await FirebaseAuth.instance.currentUser)!.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        author = value.data()!['name'].toString();
+        myProfilePic = (value.data()!['profilePicUrl']) ?? '';
+        currentCompany = (value.data()!['currentCompany']);
+      });
     });
   }
 
-  Future<void> uploadBlog() async {
-    if (selectedImage != null) {
-      // upload the image
+  void _submit() async {
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("myposts")
+        .doc(DateTime.now().toString())
+        .set({
+      "Company": companyTextEditingController.text,
+      "Exp": expTextEditingController.text,
+      "author": author,
+      "Year": yearTextEditingController.text,
+      "userUID": FirebaseAuth.instance.currentUser!.uid,
+      "currentCompany": currentCompany,
+      "profilePicUrl": myProfilePic
+    });
 
-      setState(() {
-        isLoading = true;
-      });
-      Reference firebaseStorageRef = FirebaseStorage.instance
-          .ref()
-          .child("blogImages")
-          .child("${randomAlphaNumeric(9)}.jpg");
+    await FirebaseFirestore.instance.collection("feeds").doc().set({
+      "Company": companyTextEditingController.text,
+      "author": author,
+      "Exp": expTextEditingController.text,
+      "Year": yearTextEditingController.text,
+      "userUID": FirebaseAuth.instance.currentUser!.uid,
+      'profilePic': myProfilePic,
+      "currentCompany": currentCompany,
+    });
 
-      final UploadTask task = firebaseStorageRef.putFile(selectedImage);
-
-      var imageUrl;
-      await task.whenComplete(() async {
-        try {
-          imageUrl = await firebaseStorageRef.getDownloadURL();
-        } catch (onError) {
-          print("Error");
-        }
-        print(imageUrl);
-      });
-
-      // print(downloadUrl);
-
-      Map<String, dynamic> blogData = {
-        "imgUrl": imageUrl,
-        "author": authorTextEditingController.text,
-        "title": titleTextEditingController.text,
-        "desc": descTextEditingController.text
-      };
-
-      crudMethods.addData(blogData).then((value) {
-        setState(() {
-          isLoading = false;
-        });
-        Navigator.pop(context);
-      });
-
-      // upload the blog info
-    }
+    Navigator.pop(context);
   }
 
-  //
-  TextEditingController titleTextEditingController =
-      new TextEditingController();
-  TextEditingController descTextEditingController = new TextEditingController();
-  TextEditingController authorTextEditingController =
+  Widget _submitButton() {
+    return Container(
+        child: Container(
+      height: 50,
+      width: 50.w,
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 1, 81, 230),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
+              )),
+          child: Text(
+            'Post',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ),
+          onPressed: (() {
+            _submit();
+          })),
+    ));
+  }
+
+  @override
+  void initState() {
+    _getUserDetails();
+    super.initState();
+  }
+
+  TextEditingController expTextEditingController = new TextEditingController();
+  TextEditingController yearTextEditingController = new TextEditingController();
+  TextEditingController companyTextEditingController =
       new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Create Blog"),
-        backgroundColor: Colors.indigo[900],
-        actions: [
-          GestureDetector(
-            onTap: () {
-              uploadBlog();
-            },
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Icon(Icons.file_upload)),
-          )
-        ],
+        title: Text("Create Post"),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 15, 33, 231),
       ),
-      body: isLoading
-          ? Container(
-              child: Center(
-              child: CircularProgressIndicator(),
-            ))
-          : SingleChildScrollView(
-              child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          getImage();
-                        },
-                        child: selectedImage != null
-                            ? Container(
-                                height: 150,
-                                margin: EdgeInsets.symmetric(vertical: 24),
-                                width: MediaQuery.of(context).size.width,
-                                child: ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8)),
-                                  child: Image.file(
-                                    selectedImage,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              )
-                            : Container(
-                                height: 150,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(8))),
-                                margin: EdgeInsets.symmetric(vertical: 24),
-                                width: MediaQuery.of(context).size.width,
-                                child: Icon(
-                                  Icons.camera_alt,
-                                  color: Colors.white,
-                                ),
-                              ),
-                      ),
-                      TextField(
-                        controller: titleTextEditingController,
-                        decoration: InputDecoration(hintText: "Title"),
-                      ),
-                      TextField(
-                        controller: descTextEditingController,
-                        decoration: InputDecoration(hintText: "Caption"),
-                      ),
-                      TextField(
-                        controller: authorTextEditingController,
-                        decoration: InputDecoration(hintText: "Username"),
-                      ),
-                    ],
-                  )),
-            ),
+      body: SingleChildScrollView(
+        child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 2.h,
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(255, 142, 142, 142),
+                      width: 2,
+                    ),
+                    color: Color.fromARGB(217, 254, 254, 250),
+                    borderRadius: new BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+                    child: TextField(
+                      controller: companyTextEditingController,
+                      decoration: InputDecoration(hintText: "Company"),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(255, 142, 142, 142),
+                      width: 2,
+                    ),
+                    color: Color.fromARGB(217, 254, 254, 250),
+                    borderRadius: new BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+                    child: TextField(
+                      controller: yearTextEditingController,
+                      decoration: InputDecoration(hintText: "Year"),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color.fromARGB(255, 142, 142, 142),
+                      width: 2,
+                    ),
+                    color: Color.fromARGB(217, 254, 254, 250),
+                    borderRadius: new BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15, right: 15, top: 5),
+                    child: TextField(
+                      controller: expTextEditingController,
+                      decoration:
+                          InputDecoration(hintText: "Experience/Other Details"),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 2.h,
+                ),
+                _submitButton(),
+              ],
+            )),
+      ),
     );
   }
 }
-

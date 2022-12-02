@@ -1,277 +1,342 @@
-import 'dart:ffi';
+import 'dart:io';
 
+import 'package:alumni_portal/src/screens/homePage.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
+import 'package:path/path.dart' as Path;
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
-class editProfile extends StatefulWidget {
-  const editProfile({super.key});
-
+class EditProfile extends StatefulWidget {
   @override
-  State<editProfile> createState() => _editProfileState();
+  _EditProfileState createState() => _EditProfileState();
 }
 
-class _editProfileState extends State<editProfile> {
-  String? name, profileUrl, currentcompany, role, linkedIn, github, codeforced, codechef;
+class _EditProfileState extends State<EditProfile> {
+  String? name,
+      profilePicUrl = '',
+      currentcompany = '',
+      role = '',
+      linkedIn = '',
+      github = '',
+      codeforces = '',
+      codechef = '',
+      graduationYear = '';
+  File? image;
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().getImage(source: ImageSource.gallery);
+      final imageSelected = File(image!.path);
+      setState(() {
+        this.image = imageSelected;
+      });
+    } on PlatformException catch (e) {
+      print("Failed");
+    }
+  }
+
+  void uploadDetails() async {
+    try {
+      await FirebaseStorage.instance
+          .ref()
+          .child("profile")
+          .child(FirebaseAuth.instance.currentUser!.uid.toString())
+          .putFile(File(image!.path));
+    } on FirebaseException catch (e) {
+      print(e.toString());
+    }
+    try {
+      await FirebaseStorage.instance
+          .ref()
+          .child("profile")
+          .child(FirebaseAuth.instance.currentUser!.uid.toString())
+          .getDownloadURL()
+          .then((value) {
+        profilePicUrl = value;
+      });
+    } on FirebaseException catch (e) {
+      print(e.toString());
+    }
+    try {
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc((await FirebaseAuth.instance.currentUser!.uid))
+          .update(
+        {
+          'name': name,
+          'profilePicUrl': profilePicUrl,
+          'currentCompany': currentcompany,
+          'graduationYear': graduationYear,
+          'role': role,
+          'github': github,
+          'linkedIn': linkedIn,
+          'codeforces': codeforces,
+          'codechef': codechef
+        },
+      );
+    } on FirebaseException catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _getUserDetails() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc((await FirebaseAuth.instance.currentUser)!.uid)
+        .get()
+        .then((value) {
+      setState(() {
+        name = value.data()!['name'].toString();
+        profilePicUrl = (value.data()!['profilePicUrl']) ?? '';
+        currentcompany = (value.data()!['currentCompany']) ?? '';
+        role = value.data()!['role'] ?? '';
+        linkedIn = value.data()!['linkedIn'] ?? '';
+        github = value.data()!['github'] ?? '';
+        codeforces = value.data()!['codeforces'] ?? '';
+        codechef = value.data()!['codechef'] ?? '';
+        graduationYear = value.data()!['graduationYear'] ?? '';
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserDetails();
+  }
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final _width = MediaQuery.of(context).size.width;
-    final _height = MediaQuery.of(context).size.height;
-
-    return new Container(
-      child: new Stack(
-        children: <Widget>[
-          new Container(
-            decoration: new BoxDecoration(
-                gradient: new LinearGradient(colors: [
-              const Color(0xFF26CBE6),
-              const Color(0xFF26CBC0),
-            ], begin: Alignment.topCenter, end: Alignment.center)),
-          ),
-          new Scaffold(
-            backgroundColor: Colors.transparent,
-            body: new Container(
-              child: new Stack(
-                children: <Widget>[
-                  new Align(
-                    alignment: Alignment.center,
-                    child: new Padding(
-                      padding: new EdgeInsets.only(top: _height / 15),
-                      child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          new CircleAvatar(
-                            backgroundImage:
-                                new AssetImage('assets/profile_img.jpeg'),
-                            radius: _height / 10,
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 56,
+        backgroundColor: Color.fromARGB(255, 15, 33, 231),
+        centerTitle: true,
+        title: Text("Edit Profile", style: TextStyle(fontSize: 21)),
+      ),
+      body: name == null
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 30, horizontal: 30),
+                child: Form(
+                  key: _formKey,
+                  child: Center(
+                    child: Column(
+                      children: [
+                        SizedBox(height: 0.02.h),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                            ),
+                            child: GestureDetector(
+                              child: CachedNetworkImage(
+                                height: 12.h,
+                                width: 12.h,
+                                imageUrl: profilePicUrl!,
+                                fit: BoxFit.cover,
+                                errorWidget: (context, url, error) => Center(
+                                  child: image != null
+                                      ? Image.file(image!)
+                                      : Image.asset(
+                                          'assets/images/user_default.jpg'),
+                                ),
+                                placeholder: (context, url) => Center(
+                                  child: image != null
+                                      ? Image.file(image!)
+                                      : Image.asset(
+                                          'assets/images/user_default.jpg'),
+                                ),
+                              ),
+                              onTap: () {
+                                pickImage();
+                              },
+                            ),
                           ),
-                          new SizedBox(
-                            height: _height / 30,
-                          ),
-                          new Text(
-                            'Sadiq Mehdi',
-                            style: new TextStyle(
-                                fontSize: 18.0,
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  new Padding(
-                    padding: new EdgeInsets.only(top: _height / 2.2),
-                    child: new Container(
-                      color: Colors.white,
-                    ),
-                  ),
-                  new Padding(
-                    padding: new EdgeInsets.only(
-                        top: _height / 2.6,
-                        left: _width / 20,
-                        right: _width / 20),
-                    child: new Column(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10.h,
                         ),
-                        new Container(
-                          decoration: new BoxDecoration(
+                        SizedBox(height: 18),
+                        TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'Name'),
+                            initialValue: name,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            // readOnly: true,
+                            onSaved: (value) => name = value,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Name is Required";
+                              } else {
+                                return null;
+                              }
+                            }),
+                        SizedBox(height: 6),
+                        TextFormField(
+                            decoration: const InputDecoration(
+                                labelText: 'Graduation Year'),
+                            initialValue: graduationYear,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            onSaved: (value) => graduationYear = value,
+                            validator: (value) {
+                              if (value!.length == 4 && value != null) {
+                                graduationYear = value;
+                              } else {
+                                return "Graduation year is required";
+                              }
+                            }),
+                        SizedBox(height: 6),
+                        TextFormField(
+                            initialValue: currentcompany,
+                            onSaved: (value) => currentcompany = value,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            decoration: const InputDecoration(
+                                labelText: 'Company Name'),
+                            validator: (value) {
+                              if (value != null) {
+                                currentcompany = value;
+                              } else {
+                                return "Company name is required";
+                              }
+                            }),
+                        SizedBox(height: 6),
+                        TextFormField(
+                            decoration:
+                                const InputDecoration(labelText: 'Role'),
+                            initialValue: role,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            validator: (value) {
+                              if (value != null) {
+                                role = value;
+                              } else {
+                                return "Role is required";
+                              }
+                            }),
+                        SizedBox(height: 6),
+                        TextFormField(
+                            initialValue: linkedIn,
+                            onSaved: (value) => linkedIn = value,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            decoration: const InputDecoration(
+                                labelText: 'LinkedIn URL link'),
+                            validator: (value) {
+                              if (value != null) {
+                                linkedIn = value;
+                              } else {
+                                return "LinkedIn URL link is required";
+                              }
+                            }),
+                        SizedBox(height: 6),
+                        TextFormField(
+                            initialValue: github,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            decoration: const InputDecoration(
+                                labelText: 'GitHub URL link'),
+                            validator: (value) {
+                              if (value != null) {
+                                github = value;
+                              } else {
+                                return "GitHub URL link is required";
+                              }
+                            }),
+                        SizedBox(height: 6),
+                        TextFormField(
+                            initialValue: codeforces,
+                            onSaved: (value) => codeforces = value,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            decoration: const InputDecoration(
+                                labelText: 'Codeforces URL link'),
+                            validator: (value) {
+                              if (value != null) {
+                                codeforces = value;
+                              } else {
+                                return "Codeforces URL link is required";
+                              }
+                            }),
+                        SizedBox(height: 6),
+                        TextFormField(
+                            initialValue: codechef,
+                            onSaved: (value) => codechef = value,
+                            style: TextStyle(
+                              fontSize: 15,
+                            ),
+                            decoration: const InputDecoration(
+                                labelText: 'CodeChef URL link'),
+                            validator: (value) {
+                              if (value != null) {
+                                codechef = value;
+                              } else {
+                                return "CodeChef URL link is required";
+                              }
+                            }),
+                        SizedBox(height: 50),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(15.0),
+                              ),
+                              primary: Color(0Xff15609c),
+                              padding: EdgeInsets.all(12),
+                              // padding: const EdgeInsets.all(10),
+                              minimumSize:
+                                  Size(MediaQuery.of(context).size.width, 38)),
+                          child: Text(
+                            'Done',
+                            style: TextStyle(
                               color: Colors.white,
-                              boxShadow: [
-                                new BoxShadow(
-                                    color: Colors.black45,
-                                    blurRadius: 2.0,
-                                    offset: new Offset(0.0, 2.0))
-                              ]),
-                          child: new Padding(
-                            padding: new EdgeInsets.all(_width / 20),
-                            child: new Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                headerChild('Current Company', 'XYZ'),
-                                headerChild('Role', 'xyz'),
-                              ],
+                              fontSize: 16,
                             ),
                           ),
+                          onPressed: () async {
+                            if (_formKey.currentState!.validate()) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content: Text('Processing Data')),
+                              );
+
+                              uploadDetails();
+                              // Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Home()));
+                            } else {
+                              print("Not validated");
+                            }
+                          },
                         ),
-                        Column(
-                          children: <Widget>[
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 10.h,
-                                    width: 20.w,
-                                    child: Image(
-                                      image: AssetImage(
-                                          'assets/images/linkedin.png'),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 20.w,
-                                ),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 10.h,
-                                    width: 20.w,
-                                    child: Image(
-                                      image: AssetImage(
-                                          'assets/images/github.png'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 10.h,
-                                    width: 20.w,
-                                    child: Image(
-                                      image: AssetImage(
-                                          'assets/images/codeforces.png'),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 20.w,
-                                ),
-                                GestureDetector(
-                                  onTap: () {},
-                                  child: Container(
-                                    height: 10.h,
-                                    width: 20.w,
-                                    child: Image(
-                                      image: AssetImage(
-                                          'assets/images/codechef.webp'),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            // new Padding(
-                            //   padding: new EdgeInsets.only(top: _height / 30),
-                            //   child: new Container(
-                            //     width: _width / 3,
-                            //     height: _height / 20,
-                            //     decoration: new BoxDecoration(
-                            //         color: const Color(0xFF26CBE6),
-                            //         borderRadius: new BorderRadius.all(
-                            //             new Radius.circular(_height / 40)),
-                            //         boxShadow: [
-                            //           new BoxShadow(
-                            //               color: Colors.black87,
-                            //               blurRadius: 2.0,
-                            //               offset: new Offset(0.0, 1.0))
-                            //         ]),
-                            //     child: new Center(
-                            //       child: new Text('Done',
-                            //           style: new TextStyle(
-                            //               fontSize: 16.0,
-                            //               color: Colors.white,
-                            //               fontWeight: FontWeight.bold)),
-                            //     ),
-                            //   ),
-                            // ),
-                          ],
-                        )
                       ],
                     ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget headerChild(String header, String value) => new Expanded(
-          child: new Column(
-        children: <Widget>[
-          new Text(
-            header,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 17,
-            ),
-          ),
-          new SizedBox(
-            height: 8.0,
-          ),
-          new Text(
-            '$value',
-            style: new TextStyle(
-                fontSize: 14.0,
-                color: const Color(0xFF26CBE6),
-                fontWeight: FontWeight.bold),
-          )
-        ],
-      ));
-
-  Widget infoChild(double width, ImageIcon icon, data) => new Padding(
-        padding: new EdgeInsets.only(bottom: 8.0),
-        child: new InkWell(
-          child: new Row(
-            children: <Widget>[
-              new SizedBox(
-                width: width / 10,
-              ),
-              icon,
-              new SizedBox(
-                width: width / 20,
-              ),
-              new Text(data)
-            ],
-          ),
-          onTap: () {
-            print('Info Object selected');
-          },
-        ),
-      );
-
-// yeh post k liye widget h jitna muje smj aata aata tha bna dia,
-//parameters change kr dena accordingly....
-  Widget postTile(String userName, String post) => new Padding(
-        padding: new EdgeInsets.only(bottom: 8.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: [
-                Container(
-                    height: 20,
-                    width: 20,
-                    child: Image(
-                      image: AssetImage('assets/images/linkedln.png'),
-                    )),
-                SizedBox(
-                  width: 5.w,
-                ),
-                Text(
-                  userName,
-                  style: TextStyle(
-                    fontSize: 12,
                   ),
                 ),
-              ],
+              ),
             ),
-            Container(
-              child: Text(post),
-            )
-          ],
-        ),
-      );
+    );
+  }
 }

@@ -1,4 +1,3 @@
-import 'package:alumni_portal/src/helper/sharedPref.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
@@ -22,9 +21,8 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       try {
         await FirebaseAuth.instance
             .sendPasswordResetEmail(email: _emailAddress!.trim());
-        // print(_emailAddress);
       } on FirebaseAuthException catch (e) {
-        print(e.message);
+        _showMyDialog(context, e.message.toString());
       }
     }
   }
@@ -104,4 +102,32 @@ class _ForgetPasswordState extends State<ForgetPassword> {
       ),
     );
   }
+}
+
+Future<void> _showMyDialog(BuildContext context, String err) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible:
+        false, //this means the user must tap a button to exit the Alert Dialog
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(err),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

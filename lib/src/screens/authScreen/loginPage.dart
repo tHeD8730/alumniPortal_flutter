@@ -3,8 +3,6 @@ import 'package:alumni_portal/src/screens/homePage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:flutter_login_signup/src/signup.dart';
-// import '../../Widget/bezierContainer.dart';
 import 'package:alumni_portal/src/screens/authScreen/forgetPasswordScreen.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,7 +17,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // final _auth = FirebaseAuth.instance;
   late UserCredential _credential;
   String _Password = '';
   String _emailAddress = '';
@@ -34,22 +31,16 @@ class _LoginPageState extends State<LoginPage> {
         try {
           await FirebaseAuth.instance.signInWithEmailAndPassword(
               email: _emailAddress.trim(), password: _Password.trim());
-        } catch (e) {
-          print(e.toString()); 
+        } on FirebaseAuthException catch (e) {
+          _showMyDialog(context, e.message.toString());
+          return;
         }
 
         await Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
       }
-    }
-    // } on PlatformException catch (err) {
-    //   String msg = "An Error occured!";
-    //   if (err.message != null) {
-    //     msg = err.message!;
-    //   }
-    //   print(msg);
-    catch (err) {
-      print(err);
+    } catch (e) {
+      _showMyDialog(context, e.toString());
     }
   }
 
@@ -70,8 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                 size: 5.h,
               ),
             ),
-            // Text('Back',
-            //     style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500))
           ],
         ),
       ),
@@ -115,9 +104,10 @@ class _LoginPageState extends State<LoginPage> {
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+              backgroundColor: Color.fromARGB(255, 1, 81, 230),
               shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15),
-          )),
+                borderRadius: BorderRadius.circular(15),
+              )),
           child: Text(
             'Log In',
             style: TextStyle(
@@ -211,6 +201,7 @@ class _LoginPageState extends State<LoginPage> {
                 },
                 keyboardType: TextInputType.emailAddress,
                 decoration: const InputDecoration(
+                  border: InputBorder.none,
                   label: Text('Email'),
                 ),
               ),
@@ -239,6 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                   return null;
                 },
                 decoration: const InputDecoration(
+                  border: InputBorder.none,
                   label: Text('Password'),
                 ),
                 obscureText: true,
@@ -257,15 +249,6 @@ class _LoginPageState extends State<LoginPage> {
       body: StreamBuilder<User?>(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
-            // if (snapshot.connectionState == ConnectionState.waiting) {
-            //   return Center(
-            //     child: CircularProgressIndicator(),
-            //   );
-            // } else if (snapshot.hasError) {
-            //   return Center(
-            //     child: Text('Something Went wrong!'),
-            //   );
-            // } else 
             if (snapshot.hasData) {
               return Home();
             } else {
@@ -273,17 +256,12 @@ class _LoginPageState extends State<LoginPage> {
                 height: height,
                 child: Stack(
                   children: <Widget>[
-                    // Positioned(
-                    //   top: -height * .15,
-                    //   right: -MediaQuery.of(context).size.width * .4,
-                    //   child: BezierContainer(),
-                    // ),
                     Container(
                       padding: EdgeInsets.symmetric(horizontal: 20),
                       child: SingleChildScrollView(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
                             SizedBox(
                               height: 20.h,
@@ -297,14 +275,12 @@ class _LoginPageState extends State<LoginPage> {
                               padding: EdgeInsets.symmetric(vertical: 10),
                               alignment: Alignment.centerRight,
                               child: GestureDetector(
-                                onTap: () {
-                                  // Navigator.push(
-                                  //     context, MaterialPageRoute(builder: (context) => ResetPasswordPage()));
-                                },
+                                onTap: () {},
                                 child: TextButton(
                                   child: Text(
                                     'Forgot Password ?',
                                     style: TextStyle(
+                                      color: Color.fromARGB(255, 1, 81, 230),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -317,7 +293,9 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             SizedBox(height: height * .055),
-                            _createAccountLabel(),
+                            Align(
+                                alignment: Alignment.bottomCenter,
+                                child: _createAccountLabel()),
                           ],
                         ),
                       ),
@@ -334,4 +312,32 @@ class _LoginPageState extends State<LoginPage> {
           }),
     );
   }
+}
+
+Future<void> _showMyDialog(BuildContext context, String err) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible:
+        false, //this means the user must tap a button to exit the Alert Dialog
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Error'),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              Text(err),
+            ],
+          ),
+        ),
+        actions: <Widget>[
+          ElevatedButton(
+            child: Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
